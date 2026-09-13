@@ -1022,6 +1022,7 @@ local Tabs = {
 	Exploits = Window:AddTab("作弊", "shield"),
 	Visuals  = Window:AddTab("视觉", "eye"),
 	Floors   = Window:AddTab("楼层", "earth"),
+	Settings = Window:AddTab("设置", "settings"),
 }
 
 Groupboxes.General_Character = Tabs.General:AddLeftGroupbox("角色")
