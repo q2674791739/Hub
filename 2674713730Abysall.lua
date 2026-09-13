@@ -1121,13 +1121,13 @@ end)
 
 Groupboxes.General_Self:AddDivider()
 Groupboxes.General_Self:AddSlider("PromptReachSlider", {
-	Text = "提示交互距离倍率", Min = 1, Max = 2, Default = 1, Rounding = 1, Compact = true
+	Text = "交互距离", Min = 1, Max = 2, Default = 1, Rounding = 1, Compact = true
 })
 Groupboxes.General_Self:AddToggle("InstantPrompts", {
-	Text = "瞬间交互", Default = false, Tooltip = "允许你瞬间触发所有提示。"
+	Text = "瞬间交互", Default = false, Tooltip = "允许你瞬间触发所有交互"
 })
 Groupboxes.General_Self:AddToggle("PromptClip", {
-	Text = "穿墙交互", Default = false, Tooltip = "允许你隔着墙与提示交互。"
+	Text = "穿墙交互", Default = false, Tooltip = "允许你穿墙与物品交互"
 })
 
 Options.PromptReachSlider:OnChanged(function(Value)
@@ -1147,17 +1147,17 @@ Toggles.PromptClip:OnChanged(function(Value)
 end)
 Groupboxes.Self_Automation = Tabs.General:AddRightGroupbox("自动化")
 Groupboxes.Self_Automation:AddToggle("AutoBreakerBox", {
-	Text = "自动断路器盒", Default = false, Tooltip = "自动解决断路器盒。"
+	Text = "自动断路器", Default = false, Tooltip = "自动解决断路器"
 })
 Groupboxes.Self_Automation:AddToggle("AutoSolveAnchors", {
 	Text = "自动解决锚点", Default = false,
-	Tooltip = "当你靠近锚点时，自动输入正确密码。"
+	Tooltip = "当你靠近锚点时，自动输入正确密码"
 })
 Toggles.AutoBreakerBox:OnChanged(function(Value)
 	if Value and CurrentRooms:FindFirstChild("ElevatorBreaker", true) then
 		if not Globals.BreakerBoxInteracted then
 			if not Globals.BreakerBoxNotified then
-				Functions.Notify({ Title = "与断路器盒交互。", Body = "它将自动解决。" })
+				Functions.Notify({ Title = "现在与断路器交互", Body = "它将自动解决" })
 				Globals.BreakerBoxInteracted = true
 			end
 		else
@@ -1180,7 +1180,7 @@ Groupboxes.Self_Automation:AddToggle("AutoLibraryGuessCode", {
 })
 Groupboxes.Self_Automation:AddDivider()
 Groupboxes.Self_Automation:AddToggle("AutoInteractToggle", {
-	Text = "自动交互", Default = false, Tooltip = "自动触发附近的提示。"
+	Text = "自动交互", Default = false, Tooltip = "自动与所选物品交互"
 })
 Toggles.AutoInteractToggle:AddKeyPicker("AutoInteractKeybind", {
 	Text = "自动交互", Default = "R",
@@ -1194,11 +1194,11 @@ Groupboxes.Self_Automation:AddDropdown("AutoInteractIgnoreList", {
 })
 Groupboxes.Self_Automation:AddDivider()
 Groupboxes.Self_Automation:AddToggle("AutoClosetToggle", {
-	Text = "自动躲柜", Default = false,
-	Tooltip = "当实体靠近时自动躲进附近的衣柜。"
+	Text = "自动躲藏", Default = false,
+	Tooltip = "当实体靠近时自动躲进附近的躲藏点"
 })
 Toggles.AutoClosetToggle:AddKeyPicker("AutoClosetKeybind", {
-	Text = "自动躲柜", Default = "Q", Mode = "Toggle", SyncToggleState = true
+	Text = "自动躲藏", Default = "Q", Mode = "Toggle", SyncToggleState = true
 })
 Groupboxes.Self_Automation:AddDropdown("AutoClosetEntityList", {
 	Text = "忽略列表",
@@ -1233,7 +1233,7 @@ Groupboxes.Self_Misc:AddButton({
 })
 Groupboxes.Self_Misc:AddButton({
 	Text = "重置角色",
-	Tooltip = "在服务器上杀死你的角色。（如果不支持 replicatesignal，大约需要 20 秒）",
+	Tooltip = "在当前服务器重置角色-自杀",
 	DoubleClick = true,
 	Func = function()
 		Globals.SelfKilled = true
@@ -1403,7 +1403,7 @@ Groupboxes.Exploits_BypassRight:AddToggle("InfiniteItemsToggle", {
 })
 Groupboxes.Exploits_BypassRight:AddDropdown("InfiniteItemsList", {
 	Text = "物品列表",
-	Values = { "开锁器", "万能钥匙", "剪刀", "多功能工具" },
+	Values = { "开锁器", "骷髅钥匙", "剪刀", "多功能工具" },
 	Multi = true, AllowNull = true,
 	Disabled = not Functions.CheckCompatability({"fireproximityprompt"}),
 	DisabledTooltip = Globals.IncompatibleMessage
@@ -1764,16 +1764,16 @@ Groupboxes.Visuals_ESP_Toggles:AddToggle("ObjectiveESPToggle", { Text = "目标"
 Toggles.ObjectiveESPToggle:AddColorPicker("ObjectiveESPColor", { Text = "目标", Default = Color3.fromRGB(0, 255, 0), Transparency = 0 })
 
 local ObjectiveLabels = {
-	["KeyObtain"]              = "门钥匙",
+	["KeyObtain"]              = "钥匙",
 	["ElectricalKeyObtain"]    = "电气钥匙",
 	["MinesGenerator"]         = "发电机",
-	["FuseObtain"]             = "发电机保险丝",
-	["LiveHintBook"]           = "提示书",
-	["LiveBreakerPolePickup"]  = "保险丝断路器",
+	["FuseObtain"]             = "保险丝",
+	["LiveHintBook"]           = "提示纸",
+	["LiveBreakerPolePickup"]  = "断路器",
 	["LibraryHintPaper"]       = "提示纸",
 	["PickupItem"]             = "提示纸",
 	["CringlePresent"]         = "礼物",
-	["LeverForGate"]           = "门杆",
+	["LeverForGate"]           = "拉杆",
 	["MinesGateButton"]        = "门按钮",
 	["GardenGateButton"]       = "门按钮",
 }
@@ -2456,7 +2456,7 @@ Groupboxes.Floors_Farming = Tabs.Floors:AddLeftGroupbox("刷取")
 Groupboxes.Floors_Farming:AddToggle("KnobFarm", {
     Text = "Knob 刷取",
     Default = false,
-    Tooltip = "自动为你获取 knobs，反复死亡并复活。",
+    Tooltip = "自动为你获取 knobs，反复死亡并复活完成刷取",
 })
 
 Groupboxes.Floors_Farming:AddButton({
@@ -4498,8 +4498,58 @@ Library:OnUnload(function()
 	getgenv().Abysall = nil
 end)
 while not Globals.MainUI do task.wait() end
-Abysall.Interface.ApplySettingsTab(Window)
+local SettingsTab = Tabs.Settings
+
+local MenuGroup = SettingsTab:AddLeftGroupbox("菜单")
+
+MenuGroup:AddToggle("KeybindMenuOpen", {
+    Default = Library.KeybindFrame.Visible,
+    Text = "打开快捷键菜单",
+    Callback = function(value)
+        Library.KeybindFrame.Visible = value
+    end,
+})
+
+MenuGroup:AddToggle("ShowCustomCursor", {
+    Text = "显示自定义光标",
+    Default = Library.ShowCustomCursor,
+    Callback = function(Value)
+        Library.ShowCustomCursor = Value
+    end,
+})
+
+MenuGroup:AddDropdown("DPIDropdown", {
+    Values = { "75%", "100%", "125%", "150%" },
+    Default = "100%",
+    Text = "DPI 缩放",
+    Callback = function(Value)
+        local DPI = tonumber(Value:gsub("%%", ""))
+        Library:SetDPIScale(DPI)
+    end,
+})
+
+MenuGroup:AddDivider()
+MenuGroup:AddLabel("菜单绑定"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "菜单快捷键" })
+
+MenuGroup:AddButton("卸载脚本", function()
+    Library:Unload()
+end)
+
+SaveManager:SetLibrary(Library)
+ThemeManager:SetLibrary(Library)
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({ "MenuKeybind" })
+
+ThemeManager:SetFolder("2674713730汉化")
+SaveManager:SetFolder("2674713730汉化/Doors")
+SaveManager:SetSubFolder("配置")
+SaveManager:BuildConfigSection(SettingsTab)
+ThemeManager:ApplyToTab(SettingsTab)
+
+Library.ToggleKeybind = Options.MenuKeybind
+
+while not Globals.MainUI do task.wait() end
 Functions.Notify({ 
-	Title = "成功加载，用时 " .. math.floor((tick() - LoadStart) * 1000) / 1000 .. " 秒。", 
-	Body = "按 '" .. tostring(Options.MenuKeybind.Value) .. "' 切换 UI。" 
+    Title = "成功加载，用时 " .. math.floor((tick() - LoadStart) * 1000) / 1000 .. " 秒。", 
+    Body = "按 '" .. tostring(Options.MenuKeybind.Value) .. "' 切换 UI。" 
 })
