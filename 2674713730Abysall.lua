@@ -1015,10 +1015,10 @@ local Window = Library:CreateWindow({
 	CornerRadius = 2,
 })
 
-Abysall.Interface.ApplyInfoTab(Window)
 
 local Tabs = {
-	General  = Window:AddTab("通用", "house"),
+    Info     = Window:AddTab("信息", "user"),
+    General  = Window:AddTab("通用", "house"),
 	Exploits = Window:AddTab("作弊", "shield"),
 	Visuals  = Window:AddTab("视觉", "eye"),
 	Floors   = Window:AddTab("楼层", "earth"),
@@ -4499,8 +4499,49 @@ Library:OnUnload(function()
 	getgenv().Abysall = nil
 end)
 while not Globals.MainUI do task.wait() end
-local SettingsTab = Tabs.Settings
+local InfoTab = Tabs.Info
 
+local User = InfoTab:AddLeftGroupbox("用户信息")
+local ImageSize = Enum.ThumbnailSize.Size420x420
+local ImageType = Enum.ThumbnailType.HeadShot
+local Content = Services.Players:GetUserThumbnailAsync(LocalPlayer.UserId, ImageType, ImageSize)
+
+User:AddImage("UserIcon", { Image = Content })
+User:AddLabel("ID: " .. LocalPlayer.Name, true)
+User:AddLabel("总执行次数: " .. (Abysall.TotalExecutions and Abysall.TotalExecutions or "N/A"), true)
+
+local Changelog = InfoTab:AddRightGroupbox("更新日志")
+local LatestChangelog = {
+    "2026/7/11",
+    "<font color='rgb(0, 255, 0)'>+ 新增实体 ESP 选择</font>",
+    "<font color='rgb(0, 255, 0)'>+ 新增物品通知器</font>",
+    "<font color='rgb(0, 255, 0)'>+ 新增移除 Surge</font>",
+    "<font color='rgb(0, 255, 0)'>+ 新增死亡刷取</font>",
+    "<font color='rgb(0, 255, 0)'>+ 修复一些损坏的功能（绕过 Eyes 等）</font>",
+}
+for Index, Change in pairs(LatestChangelog) do
+    Changelog:AddLabel(Change, true)
+end
+
+local Name, Version = Abysall.Environment.identifyexecutor()
+local Executor = InfoTab:AddRightGroupbox("执行器信息")
+Executor:AddLabel("名称: " .. Name, true)
+Executor:AddLabel("版本: " .. (Version and Version or "N/A"), true)
+Executor:AddDivider()
+Executor:AddLabel("测试结果: ", true)
+
+for Index, Result in pairs(Abysall.Environment.Results) do
+    Result = Result:gsub("<", "(")
+    Result = Result:gsub(">", ")")
+    Executor:AddLabel(Result, true)
+end
+
+local Community = InfoTab:AddLeftGroupbox("社区")
+Community:AddButton("复制 Discord 邀请", function()
+    toclipboard("https://dsc.gg/abysallhub")
+    Library:Notify("Discord 邀请已复制。")
+end)
+local SettingsTab = Tabs.Settings
 local MenuGroup = SettingsTab:AddLeftGroupbox("菜单")
 
 MenuGroup:AddToggle("KeybindMenuOpen", {
@@ -4510,46 +4551,68 @@ MenuGroup:AddToggle("KeybindMenuOpen", {
         Library.KeybindFrame.Visible = value
     end,
 })
-
 MenuGroup:AddToggle("ShowCustomCursor", {
-    Text = "显示自定义光标",
-    Default = Library.ShowCustomCursor,
+    Text = "自定义光标",
+    Default = false,
     Callback = function(Value)
         Library.ShowCustomCursor = Value
     end,
 })
 
+MenuGroup:AddDropdown("UILibrary", {
+    Text = "UI 风格",
+    Values = { "Obsidian", "Linoria" },
+    Default = (Abysall.UILibrary == "Linoria" and 2 or 1),
+    Callback = function(Value)
+        if Abysall.Environment.writefile and Abysall.Environment.readfile then
+            if not Abysall.Environment.isfile("Abysall/UserData.json") then
+                local Data = { TotalExecutions = 0, UILibrary = "Obsidian" }
+                Abysall.Environment.writefile("Abysall/UserData.json", Services.HttpService:JSONEncode(Data))
+            end
+            local UserData = Abysall.Environment.readfile("Abysall/UserData.json")
+            local Decoded = Services.HttpService:JSONDecode(UserData)
+            Decoded.UILibrary = Value
+            if not Decoded.UILibrary then Decoded.UILibrary = "Obsidian" end
+            Abysall.TotalExecutions = Decoded.TotalExecutions
+            Abysall.UILibrary = Decoded.UILibrary
+            Abysall.Environment.writefile("Abysall/UserData.json", Services.HttpService:JSONEncode(Decoded))
+        end
+    end
+})
+
 MenuGroup:AddDropdown("DPIDropdown", {
-    Values = { "75%", "100%", "125%", "150%" },
+    Values = { "50%", "75%", "100%", "125%", "150%", "175%", "200%" },
     Default = "100%",
     Text = "DPI 缩放",
     Callback = function(Value)
-        local DPI = tonumber(Value:gsub("%%", ""))
+        Value = Value:gsub("%%", "")
+        local DPI = tonumber(Value)
         Library:SetDPIScale(DPI)
     end,
 })
-
 MenuGroup:AddDivider()
 MenuGroup:AddLabel("菜单绑定"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "菜单快捷键" })
+
+MenuGroup:AddButton("复制 Discord 邀请", function()
+    toclipboard("https://dsc.gg/abysallhub")
+    Library:Notify("Discord 邀请已复制。")
+end)
 
 MenuGroup:AddButton("卸载脚本", function()
     Library:Unload()
 end)
 
-SaveManager:SetLibrary(Library)
-ThemeManager:SetLibrary(Library)
-SaveManager:IgnoreThemeSettings()
-SaveManager:SetIgnoreIndexes({ "MenuKeybind" })
-
-ThemeManager:SetFolder("2674713730汉化")
-SaveManager:SetFolder("2674713730汉化/Doors")
-SaveManager:SetSubFolder("配置")
-SaveManager:BuildConfigSection(SettingsTab)
-ThemeManager:ApplyToTab(SettingsTab)
-
 Library.ToggleKeybind = Options.MenuKeybind
 
-while not Globals.MainUI do task.wait() end
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({"UILibrary"})
+ThemeManager:SetFolder("Abysall")
+SaveManager:SetFolder("Abysall/" .. Abysall.SavePath)
+SaveManager:BuildConfigSection(SettingsTab)
+ThemeManager:ApplyToTab(SettingsTab)
+SaveManager:LoadAutoloadConfig()
 Functions.Notify({ 
     Title = "成功加载，用时 " .. math.floor((tick() - LoadStart) * 1000) / 1000 .. " 秒。", 
     Body = "按 '" .. tostring(Options.MenuKeybind.Value) .. "' 切换 UI。" 
