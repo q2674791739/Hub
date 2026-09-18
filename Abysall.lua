@@ -1015,15 +1015,14 @@ local Window = Library:CreateWindow({
 	CornerRadius = 2,
 })
 
-
+Abysall.Interface.ApplyInfoTab(Window)
 local Tabs = {
-    Info     = Window:AddTab("信息", "user"),
     General  = Window:AddTab("通用", "house"),
 	Exploits = Window:AddTab("作弊", "shield"),
 	Visuals  = Window:AddTab("视觉", "eye"),
 	Floors   = Window:AddTab("楼层", "earth"),
-	Settings = Window:AddTab("设置", "settings"),
 }
+Abysall.Interface.ApplySettingsTab(Window)
 
 Groupboxes.General_Character = Tabs.General:AddLeftGroupbox("角色")
 Groupboxes.General_Character:AddSlider("SpeedBoostSlider", {
@@ -4499,8 +4498,6 @@ Library:OnUnload(function()
 	getgenv().Abysall = nil
 end)
 
-Abysall.Interface.ApplyInfoTab(Window)
-Abysall.Interface.ApplySettingsTab(Window)
 
 Functions.Notify({ 
     Title = "成功加载，用时 " .. math.floor((tick() - LoadStart) * 1000) / 1000 .. " 秒。", 
