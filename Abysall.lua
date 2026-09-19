@@ -1147,7 +1147,7 @@ Toggles.PromptClip:OnChanged(function(Value)
 end)
 Groupboxes.Self_Automation = Tabs.General:AddRightGroupbox("自动化")
 Groupboxes.Self_Automation:AddToggle("AutoBreakerBox", {
-	Text = "自动断路器", Default = false, Tooltip = "自动解决断路器"
+	Text = "自动解决电箱谜题", Default = false, Tooltip = "自动解决电箱谜题"
 })
 Groupboxes.Self_Automation:AddToggle("AutoSolveAnchors", {
 	Text = "自动解决锚点", Default = false,
@@ -1411,8 +1411,8 @@ Groupboxes.Exploits_BypassRight:AddDropdown("InfiniteItemsList", {
 
 Groupboxes.Exploits_BypassRight:AddDivider()
 Groupboxes.Exploits_BypassRight:AddToggle("PositionSpoof", {
-	Text = "位置欺骗", Default = false,
-	Tooltip = "让你的角色在服务器上显示在地底下，保护你免受 Rush 类实体伤害。"
+	Text = "位置欺骗-无敌", Default = false,
+	Tooltip = "让你的角色在服务器显示在地底下，保护你免受 Rush 类实体伤害。"
 })
 Groupboxes.Exploits_BypassRight:AddToggle("CrouchSpoof", {
 	Text = "蹲下欺骗", Default = false, Tooltip = "让游戏认为你始终处于蹲下状态。"
@@ -1732,7 +1732,7 @@ Groupboxes.Visuals_EntitySettings:AddSlider("NotifySoundVolume", { Text = "音�
 Groupboxes.Visuals_EntitySettings:AddToggle("NotifyPlaySound", { Text = "播放声音", Default = true, Tooltip = "让通知播放提示音。" })
 Groupboxes.Visuals_EntitySettings:AddToggle("NotifyKeepNotifications", { Text = "保持通知", Default = false, Tooltip = "某些通知会一直留在屏幕上直到不再需要。" })
 Groupboxes.Visuals_EntitySettings:AddButton({ Text = "测试通知", DoubleClick = false, Tooltip = "发送一条测试通知，查看设置效果。", Func = function()
-	Functions.Notify({Title = "这是一条测试通知。"})
+	Functions.Notify({Title = "这是一条测试通知"})
 end})
 
 Groupboxes.Visuals_ESP          = Tabs.Visuals:AddRightTabbox("ESP/设置")
@@ -1765,7 +1765,7 @@ Toggles.ObjectiveESPToggle:AddColorPicker("ObjectiveESPColor", { Text = "目标"
 
 local ObjectiveLabels = {
 	["KeyObtain"]              = "钥匙",
-	["ElectricalKeyObtain"]    = "电气钥匙",
+	["ElectricalKeyObtain"]    = "电气间钥匙",
 	["MinesGenerator"]         = "发电机",
 	["FuseObtain"]             = "保险丝",
 	["LiveHintBook"]           = "提示纸",
@@ -1935,9 +1935,9 @@ Toggles.CurrencyESPToggle:OnChanged(function(Value)
 		if Value then
 			local Label
 			if Object.Name == "GoldPile" and Object:GetAttribute("GoldValue") then
-				Label = "金币堆 [" .. Object:GetAttribute("GoldValue") .. "]"
+				Label = "金币推 [" .. Object:GetAttribute("GoldValue") .. "]"
 			elseif Object.Name == "StardustPickup" then
-				Label = "星尘堆"
+				Label = "星尘"
 			end
 			if Label then Functions.AddESP({ Object = Object, Text = Label, Color = Options.CurrencyESPColor.Value }, true) end
 		else
@@ -2825,7 +2825,7 @@ Connections.AnticheatDisabler = Character:GetAttributeChangedSignal("Climbing"):
 	if Character:GetAttribute("Climbing") == true and Toggles.DisableAnticheat.Value and not Globals.AnticheatDisabled then
 		task.wait(0.25)
 		Character:SetAttribute("Climbing", false)
-		Functions.Notify({ Title = "成功禁用反作弊。", Body = "过场动画或 halt 房间后将重新启用。" })
+		Functions.Notify({ Title = "成功禁用反作弊。", Body = "过场动画或 halt 房间后需重新与梯子交互启用它" })
 		Globals.AnticheatDisabled = true
 	end
 end)
@@ -3277,7 +3277,7 @@ Functions.HandleObject = function(Object)
 		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "提示书", Color = Options.ObjectiveESPColor.Value }, true) end
 		table.insert(Objects.Objectives, Object)
 	elseif Name == "LiveBreakerPolePickup" then
-		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "保险丝断路器", Color = Options.ObjectiveESPColor.Value }, true) end
+		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "断路器", Color = Options.ObjectiveESPColor.Value }, true) end
 		for _, Child in Object:GetChildren() do
 			if Child.Name == "ActivateEventPrompt" and (Child.MaxActivationDistance == 5 or Child:GetAttribute("MaxActivationDistance_Old") == 5) then
 				Child:Destroy()
@@ -3337,21 +3337,21 @@ elseif Name == "MinesGenerator" then
 		end
 	end)
 elseif Name == "FuseObtain" then
-	if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "发电机保险丝", Color = Options.ObjectiveESPColor.Value }, true) end
+	if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "保险丝", Color = Options.ObjectiveESPColor.Value }, true) end
 	Object:WaitForChild("Hitbox").FuseModel:GetPropertyChangedSignal("LocalTransparencyModifier"):Once(function()
 		Functions.RemoveESP(Object)
 		Functions.BlacklistESP(Object)
 	end)
 	table.insert(Objects.Objectives, Object)
 elseif Name == "MinesGateButton" then
-	if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "门按钮", Color = Options.ObjectiveESPColor.Value }, true) end
+	if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "按钮", Color = Options.ObjectiveESPColor.Value }, true) end
 	Object.Parent:WaitForChild("MinesGate").Main.SoundOpen.Played:Once(function()
 		Functions.RemoveESP(Object)
 		Functions.BlacklistESP(Object)
 	end)
 	table.insert(Objects.Objectives, Object)
 elseif Name == "GardenGateButton" then
-	if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "门按钮", Color = Options.ObjectiveESPColor.Value }, true) end
+	if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "按钮", Color = Options.ObjectiveESPColor.Value }, true) end
 	Object.Parent:WaitForChild("GardenGate").Collision.Sound.Played:Once(function()
 		Functions.RemoveESP(Object)
 		Functions.BlacklistESP(Object)
