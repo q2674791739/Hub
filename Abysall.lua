@@ -1022,6 +1022,7 @@ local Tabs = {
 	Visuals  = Window:AddTab("视觉", "eye"),
 	Floors   = Window:AddTab("楼层", "earth"),
 }
+Abysall.Interface.ApplyEntertainmentTab(Window)
 Abysall.Interface.ApplySettingsTab(Window)
 
 Groupboxes.General_Character = Tabs.General:AddLeftGroupbox("角色")
