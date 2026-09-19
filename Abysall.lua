@@ -1045,11 +1045,11 @@ Groupboxes.General_Character:AddToggle("NoclipToggle", {
 	Text = "穿墙", Default = false, Tooltip = "允许你的角色穿过固体物体。"
 })
 Groupboxes.General_Character:AddToggle("RemoveClosetDelay", {
-	Text = "移除衣柜延迟", Default = false,
-	Tooltip = "移除动画结束后短暂无法离开衣柜的时间窗口。"
+	Text = "移除衣柜后摇", Default = false,
+	Tooltip = "移除动画结束后短暂无法离开衣柜的后摇。"
 })
 Groupboxes.General_Character:AddToggle("RemoveAcceleration", {
-	Text = "移除加速度", Default = false, Tooltip = "防止你的角色移动时滑行。"
+	Text = "移除移动后摇", Default = false, Tooltip = "防止你的角色移动时滑行。"
 })
 local CustomPhysics
 
@@ -1076,7 +1076,7 @@ Groupboxes.General_Character:AddToggle("EnableCharacterSlide", {
 	Text = "启用滑铲", Default = false, Tooltip = "允许你的角色滑铲。"
 })
 Groupboxes.General_Character:AddToggle("InfiniteJumps", {
-	Text = "无限跳跃", Default = false, Tooltip = "允许你在空中跳跃。"
+	Text = "无限跳跃", Default = false, Tooltip = "允许你无限跳跃。"
 })
 
 local OldJump = false
@@ -1377,7 +1377,7 @@ Groupboxes.Exploits_BypassRight:AddToggle("DisableAnticheat", {
 })
 Groupboxes.Exploits_BypassRight:AddToggle("VelocityManipulationToggle", {
 	Text = "速度操控", Default = false,
-	Tooltip = "让你的角色缓慢向前移动，减轻游戏的反穿墙机制。"
+	Tooltip = "让你的角色缓慢向前移动，减轻游戏的反作弊机制。"
 })
 Toggles.DisableAnticheat:OnChanged(function(Value)
 	if Globals.AnticheatDisabled == true and not Value then
@@ -3671,7 +3671,7 @@ elseif Name == "SeekFloodline" then
 	table.insert(Objects.SeekObstructions, Object)
 elseif Object:GetAttribute("RawName") and Object:GetAttribute("RawName"):find("Halt") or Object:GetAttribute("Shade") == true then
 	if Toggles.NotifyEntities.Value and Options.EntityList.Value["Halt"] then
-		Functions.Notify({ Title = "实体 'Halt' 将在下一个房间生成。", Image = EntityIcons["Halt"] })
+		Functions.Notify({ Title = "实体 Halt 将在下一个房间生成。", Image = EntityIcons["Halt"] })
 		if Toggles.EntityChatToggle.Value then Functions.SendChat("Halt next room!") end
 	end
 	local HaltLogConn
@@ -3752,13 +3752,13 @@ then
 	table.insert(Objects.Obstructions, Object)
 	elseif Name == "ElevatorBreaker" then
 		if Toggles.AutoBreakerBox.Value and not Globals.BreakerBoxNotified then
-			Functions.Notify({ Title = "与断路器盒交互。", Body = "它将自动解决。" })
+			Functions.Notify({ Title = "与电箱交互。", Body = "它将自动解决谜题。" })
 			Globals.BreakerBoxNotified = true
 		end
 		Connections.BreakerConnection = Object:WaitForChild("SurfaceGui").Frame.Code:GetPropertyChangedSignal("Text"):Connect(function()
 			if Toggles.AutoBreakerBox.Value then
 				if not Globals.BreakerBoxStartNotified and (Floor == "Fools" or Floor == "OldHotel") then
-					Functions.Notify({ Title = "正在尝试解决断路器盒。", Body = "请稍候。" })
+					Functions.Notify({ Title = "正在尝试解决电箱谜题。", Body = "请稍候。" })
 					Globals.BreakerBoxStartNotified = true
 				end
 				RemotesFolder.EBF:FireServer()
@@ -3768,7 +3768,7 @@ then
 	elseif Name == "ElevatorCar" then
 		local ElevConn = Object.DescendantAdded:Connect(function(Desc)
 			if Toggles.AutoBreakerBox.Value and Desc.Name == "TouchInterest" and not Globals.BreakerBoxFinishedNotified then
-				Functions.Notify({ Title = "成功解决断路器盒。", Body = "尝试前往电梯！" })
+				Functions.Notify({ Title = "成功解决电箱谜题。", Body = "尝试前往电梯！" })
 				Globals.BreakerBoxFinishedNotified = true
 			end
 		end)
