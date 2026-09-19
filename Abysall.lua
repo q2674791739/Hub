@@ -64,71 +64,71 @@ end
 local Entities = {
 	["RushMoving"] = {
 		Alias = "Rush",
-		NotifyMessage = { Title = "实体 'Rush' 已生成。", Body = "找个躲藏点。" }
+		NotifyMessage = { Title = "实体 Rush 已生成。", Body = "找个躲藏点。" }
 	},
 	["AmbushMoving"] = {
 		Alias = "Ambush",
-		NotifyMessage = { Title = "实体 'Ambush' 已生成。", Body = "找个躲藏点。" }
+		NotifyMessage = { Title = "实体 Ambush 已生成。", Body = "找个躲藏点。" }
 	},
 	["Eyes"] = {
 		Alias = "Eyes",
-		NotifyMessage = { Title = "实体 'Eyes' 已生成。", Body = "不要看它。" }
+		NotifyMessage = { Title = "实体 Eyes 已生成。", Body = "不要看它。" }
 	},
 	["Lookman"] = {
 		Alias = "Eyes",
-		NotifyMessage = { Title = "实体 'Eyes' 已生成。", Body = "不要看它。" }
+		NotifyMessage = { Title = "实体 Eyes 已生成。", Body = "不要看它。" }
 	},
 	["BackdoorRush"] = {
 		Alias = "Blitz",
-		NotifyMessage = { Title = "实体 'Blitz' 已生成。", Body = "找个躲藏点。" }
+		NotifyMessage = { Title = "实体 Blitz 已生成。", Body = "找个躲藏点。" }
 	},
 	["BackdoorLookman"] = {
 		Alias = "Lookman",
-		NotifyMessage = { Title = "实体 'Lookman' 已生成。", Body = "不要看它的眼睛。" }
+		NotifyMessage = { Title = "实体 Lookman 已生成。", Body = "不要看它的眼睛。" }
 	},
 	["Groundskeeper"] = {
 		Alias = "Groundskeeper",
-		NotifyMessage = { Title = "实体 'Groundskeeper' 已生成。", Body = "不要踩到草地。" }
+		NotifyMessage = { Title = "实体 Groundskeeper 已生成。", Body = "不要踩到草地。" }
 	},
 	["A60"] = {
 		Alias = "A-60",
-		NotifyMessage = { Title = "实体 'A-60' 已生成。", Body = "找个躲藏点。" }
+		NotifyMessage = { Title = "实体 A-60 已生成。", Body = "找个躲藏点。" }
 	},
 	["A120"] = {
 		Alias = "A-120",
-		NotifyMessage = { Title = "实体 'A-120' 已生成。", Body = "找个躲藏点。" }
+		NotifyMessage = { Title = "实体 A-120 已生成。", Body = "找个躲藏点。" }
 	},
 	["GloombatSwarm"] = {
 		Alias = "Gloombat Swarm",
-		NotifyMessage = { Title = "实体 'Gloombat Swarm' 已生成。", Body = "关闭所有光源。" }
+		NotifyMessage = { Title = "实体 Gloombat Swarm 已生成。", Body = "关闭所有光源。" }
 	},
 	["GlitchRush"] = {
 		Alias = "RNIUSHCG==",
-		NotifyMessage = { Title = "实体 'RNIUSHCG==' 已生成。", Body = "找个躲藏点。" }
+		NotifyMessage = { Title = "实体 RNIUSHCG== 已生成。", Body = "找个躲藏点。" }
 	},
 	["GlitchAmbush"] = {
 		Alias = "AR0xMBUSH",
-		NotifyMessage = { Title = "实体 'AR0xMBUSH' 已生成。", Body = "找个躲藏点。" }
+		NotifyMessage = { Title = "实体 AR0xMBUSH 已生成。", Body = "找个躲藏点。" }
 	},
 	["MonumentEntity"] = {
 		Alias = "Monument",
-		NotifyMessage = { Title = "实体 'Monument' 已生成。", Body = "你看着它时它无法移动。" }
+		NotifyMessage = { Title = "实体 Monument 已生成。", Body = "你看着它时它无法移动。" }
 	},
 	["JeffTheKiller"] = {
 		Alias = "Jeff the Killer",
-		NotifyMessage = { Title = "实体 'Jeff the Killer' 已生成。", Body = "不要碰他。" }
+		NotifyMessage = { Title = "实体 Jeff the Killer 已生成。", Body = "不要碰他。" }
 	},
 	["CustomEntity"] = {
 		Alias = "Custom Entity",
-		NotifyMessage = { Title = "实体 'Custom Entity' 已生成。", Body = "找个躲藏点。" }
+		NotifyMessage = { Title = "实体 Custom Entity 已生成。", Body = "找个躲藏点。" }
 	},
 	["FrozenAmbush"] = {
 		Alias = "Frozen Ambush",
-		NotifyMessage = { Title = "实体 'Frozen Ambush' 已生成。", Body = "找个躲藏点。" }
+		NotifyMessage = { Title = "实体 Frozen Ambush 已生成。", Body = "找个躲藏点。" }
 	},
 	["SallyMoving"] = {
 		Alias = "Sally",
-		NotifyMessage = { Title = "实体 'Sally' 已生成。", Body = "给她丢个物品。" }
+		NotifyMessage = { Title = "实体 Sally 已生成。", Body = "给她丢个物品。" }
 	}
 }
 
@@ -190,7 +190,7 @@ local ItemNames = {
 	["Nanner"]            = "香蕉",
 	["BigBomb"]           = "大炸弹",
 	["SnakeBox"]          = "躲藏箱",
-	["GoldGun"]           = "金枪",
+	["GoldGun"]           = "黄金左轮",
 	["StopSign"]          = "停车标志",
 	["TipJar"]            = "小费罐",
 	["Lantern"]           = "灯笼",
