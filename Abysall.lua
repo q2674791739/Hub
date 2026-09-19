@@ -1026,7 +1026,7 @@ Abysall.Interface.ApplyEntertainmentTab(Window)
 Abysall.Interface.ApplySettingsTab(Window)
 
 -- ================= 音乐播放器逻辑绑定 =================
-Options.PlayMusicToggle:OnChanged(function(Value)
+Toggles.PlayMusicToggle:OnChanged(function(Value)
     if Globals.PlayingMusic then
         Globals.PlayingMusic:Destroy()
         Globals.PlayingMusic = nil
