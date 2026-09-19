@@ -3563,9 +3563,9 @@ elseif ItemNames[Name] and Object:FindFirstChild("ModulePrompt") then
 
 	if Toggles.NotifyItemsToggle.Value and Options.NotifyItemList.Value[ItemNames[Name]] and Object.Parent.Name ~= "Drops" then
 		if Toggles.NotifyItemsShowDistance.Value then
-			Functions.Notify({ Title = "物品 '" .. ItemNames[Name] .. "' 已生成。", Body = "距离你 '" .. math.round(LocalPlayer:DistanceFromCharacter(Object.PrimaryPart.Position)) .. "' studs。" })
+			Functions.Notify({ Title = "物品 " .. ItemNames[Name] .. " 已生成", Body = "距离你 " .. math.round(LocalPlayer:DistanceFromCharacter(Object.PrimaryPart.Position)) .. " 格" })
 		else
-			Functions.Notify({ Title = "物品 '" .. ItemNames[Name] .. "' 已生成。" })
+			Functions.Notify({ Title = "物品 " .. ItemNames[Name] .. " 已生成" })
 		end
 	end
 
