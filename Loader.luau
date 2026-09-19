@@ -1,5 +1,6 @@
 local BaseUrl = "https://raw.githubusercontent.com/Q2674791739/UI/main/Abysall/"
 local MyUrl = "https://raw.githubusercontent.com/Q2674791739/Hub/main/Abysall.lua"
+local LobbyUrl = "https://raw.githubusercontent.com/Q2674791739/Hub/main/Lobby.luau"
 
 local getgenv = getgenv or function() return _G end
 
@@ -23,4 +24,8 @@ getgenv().Abysall.ESPLibrary  = SafeLoad(BaseUrl .. "ESP.luau", "ESPLibrary") or
 
 SafeLoad(BaseUrl .. "STX.luau", "STX")
 
-SafeLoad(MyUrl, "汉化主脚本")
+if workspace:FindFirstChild("Lobby") then
+    SafeLoad(LobbyUrl, "汉化大厅脚本")
+else
+    SafeLoad(MyUrl, "汉化主脚本")
+end
