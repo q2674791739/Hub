@@ -1025,6 +1025,40 @@ local Tabs = {
 Abysall.Interface.ApplyEntertainmentTab(Window)
 Abysall.Interface.ApplySettingsTab(Window)
 
+-- ================= 音乐播放器逻辑绑定 =================
+Options.PlayMusicToggle:OnChanged(function(Value)
+    if Globals.PlayingMusic then
+        Globals.PlayingMusic:Destroy()
+        Globals.PlayingMusic = nil
+    end
+
+    if Value then
+        local PreRun = Globals.MainUI and Globals.MainUI.Initiator and Globals.MainUI.Initiator.Main_Game and Globals.MainUI.Initiator.Main_Game:FindFirstChild("PreRun")
+        if not PreRun then
+            Functions.Notify({ Title = "尚未加载游戏音乐模块" })
+            Toggles.PlayMusicToggle:SetValue(false)
+            return
+        end
+
+        local selected = Options.SelectMusicDropdown.Value
+        local targetSoundName = (selected == "Win (胜利)") and "Win" or "MusicRanked"
+        local originalSound = PreRun:FindFirstChild(targetSoundName)
+
+        if originalSound then
+            local clonedSound = originalSound:Clone()
+            clonedSound.Looped = true
+            clonedSound.Volume = 2
+            clonedSound.Parent = game:GetService("SoundService")
+            clonedSound:Play()
+            Globals.PlayingMusic = clonedSound
+            Functions.Notify({ Title = "正在播放: " .. targetSoundName })
+        else
+            Functions.Notify({ Title = "找不到音乐: " .. targetSoundName })
+            Toggles.PlayMusicToggle:SetValue(false)
+        end
+    end
+end)
+-- 🤪🤪🤪🤪🤪🤪🤪🤪🤪🤪🤪🤪🤪🤪🤪🤪
 Groupboxes.General_Character = Tabs.General:AddLeftGroupbox("角色")
 Groupboxes.General_Character:AddSlider("SpeedBoostSlider", {
 	Text = "速度提升", Min = 0, Max = 100, Default = 0, Rounding = 0, Compact = true
