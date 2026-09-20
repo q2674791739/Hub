@@ -1535,11 +1535,23 @@ Toggles.RemoveJamminMusic:OnChanged(function(Value)
 	end
 end)
 Toggles.RemoveInteractingSounds:OnChanged(function(Value)
-	local PS = Globals.MainUI.Initiator.Main_Game.PromptService
-	PS.Triggered.Volume   = Value and 0 or 0.04
-	PS.Holding.Volume     = Value and 0 or 0.1
-	PS.Notification.Volume = Value and 0 or 0.03
-	Globals.MainUI.Initiator.Main_Game.Reminder.Caption.Volume = Value and 0 or 0.1
+    local TargetVolume = Value and 0 or 0.1
+    local Main_Game = Globals.MainUI.Initiator.Main_Game
+    local PS = Main_Game:FindFirstChild("PromptServiceHint") or Main_Game:FindFirstChild("PromptService")
+    if PS then
+        if PS:FindFirstChild("Triggered") then PS.Triggered.Volume = TargetVolume end
+        if PS:FindFirstChild("Holding") then PS.Holding.Volume = TargetVolume end
+        if PS:FindFirstChild("Notification") then PS.Notification.Volume = TargetVolume end
+    end
+    for _, v in pairs(Main_Game:GetDescendants()) do
+        if v:IsA("Sound") and (v.Name == "Triggered" or v.Name == "Holding" or v.Name == "Notification") then
+            v.Volume = TargetVolume
+        end
+    end
+    local Reminder = Main_Game:FindFirstChild("Reminder")
+    if Reminder and Reminder:FindFirstChild("Caption") then
+        Reminder.Caption.Volume = TargetVolume
+    end
 end)
 
 Groupboxes.Visuals_LeftTab = Tabs.Visuals:AddLeftTabbox("相机 / 效果")
