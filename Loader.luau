@@ -5,6 +5,7 @@ local LobbyUrl = "https://raw.githubusercontent.com/Q2674791739/Hub/main/Lobby.l
 local getgenv = getgenv or function() return _G end
 
 getgenv().Abysall = getgenv().Abysall or {}
+getgenv().Abysall.UILibrary = getgenv().Abysall.UILibrary or "Obsidian"
 
 local function SafeLoad(Url, Name)
     local Success, Result = pcall(function()
