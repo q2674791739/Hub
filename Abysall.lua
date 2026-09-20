@@ -2726,11 +2726,22 @@ Functions.HandleCharacter = function(NewCharacter)
 		if Vignette then Vignette.Image = "Disabled" end
 	end
 	if Toggles.RemoveInteractingSounds.Value then
-		local PS = Globals.MainUI.Initiator.Main_Game.PromptService
-		PS.Triggered.Volume = 0
-		PS.Holding.Volume   = 0
-		PS.Notification.Volume = 0
-		Globals.MainUI.Initiator.Main_Game.Reminder.Caption.Volume = 0
+    local Main_Game = Globals.MainUI.Initiator.Main_Game
+    local PS = Main_Game:FindFirstChild("PromptServiceHint") or Main_Game:FindFirstChild("PromptService")
+    if PS then
+        if PS:FindFirstChild("Triggered") then PS.Triggered.Volume = 0 end
+        if PS:FindFirstChild("Holding") then PS.Holding.Volume = 0 end
+        if PS:FindFirstChild("Notification") then PS.Notification.Volume = 0 end
+    end
+    for _, v in pairs(Main_Game:GetDescendants()) do
+        if v:IsA("Sound") and (v.Name == "Triggered" or v.Name == "Holding" or v.Name == "Notification") then
+            v.Volume = 0
+        end
+    end
+    local Reminder = Main_Game:FindFirstChild("Reminder")
+    if Reminder and Reminder:FindFirstChild("Caption") then
+        Reminder.Caption.Volume = 0
+    end
 	end
 	if Toggles.DisableEntityJumpscares.Value then
 		local JS = Globals.MainUI.Initiator.Main_Game.RemoteListener:FindFirstChild("Jumpscares")
