@@ -22,7 +22,6 @@ local Services = setmetatable({}, {
 })
 
 local Globals = {}
-getgenv().Globals = Globals
 local Connections = {}
 local ESPConnections = {}
 local Groupboxes = {}
@@ -4522,10 +4521,6 @@ Library:OnUnload(function()
 		local Controls = require(LocalPlayer.PlayerScripts.PlayerModule):GetControls()
 		Controls.GetMoveVector = Globals.OriginalGetMoveVector
 	end
-    if Globals.CurrentMusic then
-    Globals.CurrentMusic:Destroy()
-    Globals.CurrentMusic = nil
-    end
 
 	getgenv().Abysall = nil
 end)
