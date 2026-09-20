@@ -4139,8 +4139,7 @@ Functions.TriggerPrompt = function(Prompt)
 	if Prompt.Parent:GetAttribute("JeffShop") and Options.AutoInteractIgnoreList.Value["Jeff 物品"] then return end
 	if Prompt:GetAttribute("AutoInteractIgnore") then return end
 	if Prompt.Name == "PushPrompt" and Options.AutoInteractIgnoreList.Value["矿车"] then return end
-    if Prompt.Parent.Name == "ArchivesTerminal" and Prompt.Name == "ActivateEventPrompt" and not Globals.IsTerminalBuying then Globals.IsTerminalBuying = true task.spawn(function() local r = game:GetService("ReplicatedStorage"):FindFirstChild("TerminalRemote") task.wait(0.5) if r then local g = function() local t = LocalPlayer.PlayerGui:FindFirstChild("TopbarUI") return t and t.Topbar.StatsTopbarHandler.StatModules.Gold.GoldVal.Value or 0 end while g() >= 100 do local o = g() pcall(function() r:InvokeServer("Buy") end) task.wait(0.5) if g() >= o then break end end task.wait(0.2) pcall(function() r:InvokeServer("Release") end) Notify("档案终端购买完成已提交", 3) end Globals.IsTerminalBuying = false end) end
-	if (Prompt.Parent.Name == "GoldPile" or Prompt.Parent.Name == "StardustPickup") and Options.AutoInteractIgnoreList.Value["货币"] then return end
+	if (Prompt.Parent.Name == "GoldPile" or Prompt.Parent.Name == "StardustPickup") and Options.AutoInteractIgnoreList.Value["货币"] then return en
     if (Prompt.Parent.Name == "SeatPart" or Prompt.Parent.Name == "Collider" or Prompt.Name == "SeatPrompt") and Options.AutoInteractIgnoreList.Value["椅子"] then return end
     if (Prompt.Parent.Name == "Flap" or Prompt.Name == "TrashcanPrompt") and Options.AutoInteractIgnoreList.Value["垃圾桶"] then return end
     if (Prompt.Parent.Name == "Vendor_ShakelightVendingMachine" or Prompt.Name == "VendorPrompt") and Options.AutoInteractIgnoreList.Value["售货机"] then return end
