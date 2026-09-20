@@ -4532,10 +4532,10 @@ Library:OnUnload(function()
 		local Controls = require(LocalPlayer.PlayerScripts.PlayerModule):GetControls()
 		Controls.GetMoveVector = Globals.OriginalGetMoveVector
 	end
-    if Globals.PlayingMusic then
-    Globals.PlayingMusic:Destroy()
-    Globals.PlayingMusic = nil
-  end
+    if Globals.CurrentMusic then
+    Globals.CurrentMusic:Destroy()
+    Globals.CurrentMusic = nil
+    end
 
 	getgenv().Abysall = nil
 end)
