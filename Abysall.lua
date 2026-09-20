@@ -22,6 +22,7 @@ local Services = setmetatable({}, {
 })
 
 local Globals = {}
+getgenv().Globals = Globals
 local Connections = {}
 local ESPConnections = {}
 local Groupboxes = {}
