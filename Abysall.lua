@@ -1187,8 +1187,8 @@ Toggles.AutoInteractToggle:AddKeyPicker("AutoInteractKeybind", {
 })
 Groupboxes.Self_Automation:AddDropdown("AutoInteractIgnoreList", {
 	Text = "忽略列表",
-	Values = { "故障碎片", "Jeff 物品", "掉落物品", "货币", "矿车", "锁", "椅子", "垃圾桶", "售货机", "档案终端", "打印机"},
-Default = { "故障碎片", "Jeff 物品", "掉落物品", "椅子", "矿车", "垃圾桶", "售货机", "档案终端", "打印机"},
+	Values = { "故障碎片", "Jeff 物品", "掉落物品", "矿车", "椅子", "垃圾桶", "售货机", "档案终端", "打印机", "锁", "货币" },
+Default = { "故障碎片", "Jeff 物品", "掉落物品", "矿车", "椅子", "垃圾桶", "售货机", "档案终端", "打印机"},
 	Multi = true, AllowNull = true
 })
 Groupboxes.Self_Automation:AddDivider()
