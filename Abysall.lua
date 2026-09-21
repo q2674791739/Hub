@@ -4140,7 +4140,7 @@ Functions.TriggerPrompt = function(Prompt)
     if (Prompt.Parent.Name == "Flap" or Prompt.Name == "TrashcanPrompt") and Options.AutoInteractIgnoreList.Value["垃圾桶"] then return end
     if (Prompt.Parent.Name == "Vendor_ShakelightVendingMachine" or Prompt.Name == "VendorPrompt") and Options.AutoInteractIgnoreList.Value["售货机"] then return end
     if Prompt.Parent.Name == "ArchivesTerminal" and Options.AutoInteractIgnoreList.Value["档案终端"] then return end
-    if Prompt.Parent.Name == "PrintedPaper" and Options.AutoInteractIgnoreList.Value["打印机"] then return end
+    if Prompt.Parent.Parent and Prompt.Parent.Parent.Name == "ArchivesLargePrinter" and Options.AutoInteractIgnoreList.Value["打印机"] then return end
 	if Prompt.Parent.Name == "Bandage" then
 		local BPack = Functions.HasItem("BandagePack")
 		if Humanoid.Health >= Humanoid.MaxHealth and not BPack then return end
