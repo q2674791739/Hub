@@ -56,7 +56,7 @@ Abysall.Interface = loadstring(game:HttpGet(BaseUrl .. "Interface.luau"))()
 
 local CurrentGame = GameList[game.GameId]
 if CurrentGame then
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/q2674791739/UI/main/Games/" .. CurrentGame .. "/Loader.luau"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/q2674791739/Hub/main/Loader.luau"))()
 else
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/q2674791739/UI/main/Games/Universal/Loader.luau"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/q2674791739/Hub/main/Loader.luau"))()
 end
