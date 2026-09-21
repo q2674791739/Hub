@@ -159,7 +159,7 @@ local ItemNames = {
 	["StarVial"]          = "小星光瓶",
 	["StarBottle"]        = "星光瓶",
 	["StarJug"]           = "星光桶",
-	["Shakelight"]        = "软糖手电筒",
+	["Shakelight"]        = "手电筒（晃动）",
 	["Straplight"]        = "绑带灯",
 	["Bulklight"]         = "聚光灯",
 	["Battery"]           = "电池",
@@ -174,7 +174,8 @@ local ItemNames = {
 	["BandagePack"]       = "绷带包",
 	["BatteryPack"]       = "电池包",
 	["RiftCandle"]        = "月光蜡烛",
-	["LaserPointer"]      = "激光笔",
+	["Pizza"]             = "披萨",
+    ["LaserPointer"]      = "激光笔",
 	["HolyGrenade"]       = "圣手榴弹",
 	["Shears"]            = "剪刀",
 	["Smoothie"]          = "冰沙",
@@ -208,6 +209,9 @@ local ItemNames = {
 	["Donut"]             = "甜甜圈",
 	["Lotus"]             = "莲花",
 	["BoxingGloves"]      = "拳击手套"
+    ["PaperPlane"]        = "纸飞机",
+    ["FihFlakes"]         = "鱼片",
+
 }
 
 local CutsceneNames = {
