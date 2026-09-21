@@ -4138,7 +4138,7 @@ Functions.TriggerPrompt = function(Prompt)
 	if Prompt.Parent:GetAttribute("JeffShop") and Options.AutoInteractIgnoreList.Value["Jeff 物品"] then return end
 	if Prompt:GetAttribute("AutoInteractIgnore") then return end
 	if Prompt.Name == "PushPrompt" and Options.AutoInteractIgnoreList.Value["矿车"] then return end
-	if (Prompt.Parent.Name == "GoldPile" or Prompt.Parent.Name == "StardustPickup") and Options.AutoInteractIgnoreList.Value["货币"] then return en
+	if (Prompt.Parent.Name == "GoldPile" or Prompt.Parent.Name == "StardustPickup") and Options.AutoInteractIgnoreList.Value["货币"] then return end
     if (Prompt.Parent.Name == "SeatPart" or Prompt.Parent.Name == "Collider" or Prompt.Name == "SeatPrompt") and Options.AutoInteractIgnoreList.Value["椅子"] then return end
     if (Prompt.Parent.Name == "Flap" or Prompt.Name == "TrashcanPrompt") and Options.AutoInteractIgnoreList.Value["垃圾桶"] then return end
     if (Prompt.Parent.Name == "Vendor_ShakelightVendingMachine" or Prompt.Name == "VendorPrompt") and Options.AutoInteractIgnoreList.Value["售货机"] then return end
