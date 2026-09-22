@@ -436,7 +436,6 @@ Globals.DoorsNotify = function(NotifyOptions)
 
 	local Color = NotifyOptions.Color or Color3.new(1, 1, 1)
 	Achievement.Frame.TextLabel.TextColor3 = Color
-	Achievement.Frame.UIStroke.Color = Color
 	Achievement.Frame.Glow.ImageColor3 = Color
 	Achievement.Parent = AchievementsHolder
 
