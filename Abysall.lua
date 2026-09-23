@@ -208,7 +208,7 @@ local ItemNames = {
 	["AloeVera"]          = "芦荟",
 	["Donut"]             = "甜甜圈",
 	["Lotus"]             = "莲花",
-	["BoxingGloves"]      = "拳击手套"
+	["BoxingGloves"]      = "拳击手套",
     ["PaperPlane"]        = "纸飞机",
     ["FihFlakes"]         = "鱼片",
 
