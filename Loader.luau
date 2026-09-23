@@ -1,20 +1,22 @@
-if Abysall then
+if getgenv and getgenv().Abysall then
     return 
 end
-getgenv().Abysall = {
-    Legit = true
-}
+if getgenv then
+    getgenv().Abysall = { Legit = true }
+end
 
 local GameList = {
   [2440500124] = "Doors"
 }
 
-
-local BaseUrl = "https://raw.githubusercontent.com/q2674791739/UI/main/Abysall/"
+-- UI 组件位置
+local UIBaseUrl = "https://raw.githubusercontent.com/q2674791739/UI/main/Abysall/"
+-- 游戏脚本位置
+local HubBaseUrl = "https://raw.githubusercontent.com/q2674791739/Hub/main/"
 
 getgenv().Abysall = {
-    Environment = loadstring(game:HttpGet(BaseUrl .. "Environment.luau"))(),
-    ESPLibrary = loadstring(game:HttpGet(BaseUrl .. "ESP.luau"))(),
+    Environment = loadstring(game:HttpGet(UIBaseUrl .. "Environment.luau"))(),
+    ESPLibrary = loadstring(game:HttpGet(UIBaseUrl .. "ESP.luau"))(),
     Legit = true,
 }
 
@@ -32,7 +34,6 @@ local Services = setmetatable({}, {
     end
 })
 
--- 执行次数统计
 if Abysall.Environment.writefile and Abysall.Environment.readfile then
     if not Abysall.Environment.isfile("Abysall/UserData.json") then
         local Data = { TotalExecutions = 0, UILibrary = "Obsidian" }
@@ -51,12 +52,6 @@ if Abysall.Environment.writefile and Abysall.Environment.readfile then
     Abysall.Environment.writefile("Abysall/UserData.json", Services.HttpService:JSONEncode(Decoded))
 end
 
+Abysall.Interface = loadstring(game:HttpGet(UIBaseUrl .. "Interface.luau"))()
 
-Abysall.Interface = loadstring(game:HttpGet(BaseUrl .. "Interface.luau"))()
-
-local CurrentGame = GameList[game.GameId]
-if CurrentGame then
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/q2674791739/Hub/main/Loader.luau"))()
-else
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/q2674791739/Hub/main/Loader.luau"))()
-end
+loadstring(game:HttpGet(HubBaseUrl .. "Loader.lua"))()
