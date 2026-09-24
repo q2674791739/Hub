@@ -764,7 +764,7 @@ local EntityDistances = {
 Functions.GetNearestEntity = function(CheckDisabled, List, UseRaycasting)
 	local Nearest = { Distance = math.huge, Object = nil }
 
-	for _, Entity in Services.Workspace:GetChildren() do
+	for _, Entity in Objects.Entities do
 		if Entity and EntityDistances[Entity.Name] and Entity.PrimaryPart then
 			local EntityData = Entities[Entity.Name]
 			if not (List and List[EntityData.Alias]) then
