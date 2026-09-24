@@ -4095,6 +4095,14 @@ Functions.TriggerPrompt = function(Prompt)
 	if not Prompt or not Prompt.Parent then return end
 	if TriggerDebounce then return end
 
+    if Prompt.Parent.Name == "SeatPart" or Prompt.Parent.Name == "Collider" or Prompt.Name == "SeatPrompt" then return end
+    if Prompt.Parent.Name == "Flap" or Prompt.Name == "TrashcanPrompt" then return end
+    if Prompt.Parent.Name == "Vendor_ShakelightVendingMachine" or Prompt.Name == "VendorPrompt" then return end
+    if Prompt.Parent.Name == "ArchivesTerminal" then return end
+    if Prompt.Parent.Parent and Prompt.Parent.Parent.Name == "ArchivesLargePrinter" then return end
+    if Prompt.Parent.Name == "PaperPlanePickup" or Prompt.Parent.Name == "PaperPlane" then return end
+    if Prompt.Parent.Name == "StairwellTerminal" then return end
+
 	local ParentItem = Functions.HasItem(Prompt.Parent.Name)
 	if ParentItem and ParentItem:GetAttribute("Durability") and ParentItem:GetAttribute("DurabilityMax")
 		and ParentItem:GetAttribute("Durability") >= ParentItem:GetAttribute("DurabilityMax")
@@ -4139,11 +4147,6 @@ Functions.TriggerPrompt = function(Prompt)
 	if Prompt:GetAttribute("AutoInteractIgnore") then return end
 	if Prompt.Name == "PushPrompt" and Options.AutoInteractIgnoreList.Value["矿车"] then return end
 	if (Prompt.Parent.Name == "GoldPile" or Prompt.Parent.Name == "StardustPickup") and Options.AutoInteractIgnoreList.Value["货币"] then return end
-    if (Prompt.Parent.Name == "SeatPart" or Prompt.Parent.Name == "Collider" or Prompt.Name == "SeatPrompt") and Options.AutoInteractIgnoreList.Value["椅子"] then return end
-    if (Prompt.Parent.Name == "Flap" or Prompt.Name == "TrashcanPrompt") and Options.AutoInteractIgnoreList.Value["垃圾桶"] then return end
-    if (Prompt.Parent.Name == "Vendor_ShakelightVendingMachine" or Prompt.Name == "VendorPrompt") and Options.AutoInteractIgnoreList.Value["售货机"] then return end
-    if Prompt.Parent.Name == "ArchivesTerminal" and Options.AutoInteractIgnoreList.Value["档案终端"] then return end
-    if Prompt.Parent.Parent and Prompt.Parent.Parent.Name == "ArchivesLargePrinter" and Options.AutoInteractIgnoreList.Value["打印机"] then return end
 	if Prompt.Parent.Name == "Bandage" then
 		local BPack = Functions.HasItem("BandagePack")
 		if Humanoid.Health >= Humanoid.MaxHealth and not BPack then return end
