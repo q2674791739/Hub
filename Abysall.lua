@@ -2065,8 +2065,8 @@ Toggles.ESPArrowsToggle:OnChanged(function(V)    Abysall.ESPLibrary:SetArrows(V)
 Options.ESPArrowsRadius:OnChanged(function(V)    Abysall.ESPLibrary:SetArrowRadius(V) end)
 Tabs.Floors:UpdateWarningBox({
 	Visible = true,
-	Title = "兼容性警告",
-	Text = "红色高亮的功能在当前楼层无法使用。",
+	Title = "功能兼容性警告",
+	Text = "标红文字，对应功能可能无法成功实现",
 })
 
 Groupboxes.Floors_Automation = Tabs.Floors:AddRightGroupbox("自动化")
