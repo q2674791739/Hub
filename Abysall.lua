@@ -584,9 +584,6 @@ end
 
 if not LocalPlayer.Character or not CurrentRooms:FindFirstChildOfClass("Model") then
 	Functions.Notify({ Title = "等待游戏加载..." })
-pcall(function()
-    queue_on_teleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/q2674791739/Hub/main/Loader.luau"))()]])
-end)
 	while not LocalPlayer.Character or not CurrentRooms:FindFirstChildOfClass("Model") do
 		task.wait()
 	end
