@@ -2065,28 +2065,28 @@ Toggles.ESPArrowsToggle:OnChanged(function(V)    Abysall.ESPLibrary:SetArrows(V)
 Options.ESPArrowsRadius:OnChanged(function(V)    Abysall.ESPLibrary:SetArrowRadius(V) end)
 Tabs.Floors:UpdateWarningBox({
 	Visible = true,
-	Title = "功能兼容性警告",
-	Text = "标红文字，对应功能可能无法成功实现",
+	Title = "兼容性警告",
+	Text = "红色高亮的功能在当前楼层无法使用",
 })
 
-Groupboxes.Floors_Automation = Tabs.Floors:AddRightGroupbox("自动化")
+Groupboxes.Floors_Automation = Tabs.Floors:AddRightGroupbox("自动化（楼层）")
 Groupboxes.Floors_Automation:AddToggle("AutoSteerMinecart", {
-	Text = "自动驾驶矿车", Default = false, Tooltip = "自动完成矿车追逐。",
+	Text = "自动驾驶矿车（Mines）", Default = false, Tooltip = "自动完成矿车追逐。",
 	Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage
 })
 Groupboxes.Floors_Automation:AddSlider("AutoSteerMinecartTurnDistance", {
-	Text = "转向距离", Min = 20, Max = 40, Default = 30, Rounding = 0,
+	Text = "矿车转向距离", Min = 20, Max = 40, Default = 30, Rounding = 0,
 	Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage
 })
 Groupboxes.Floors_Automation:AddSlider("AutoSteerMinecartDuckDistance", {
-	Text = "蹲下距离", Min = 20, Max = 40, Default = 30, Rounding = 0,
+	Text = "矿车蹲下距离", Min = 20, Max = 40, Default = 30, Rounding = 0,
 	Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage
 })
 Groupboxes.Floors_Automation:AddDivider()
-Groupboxes.Floors_Automation:AddToggle("RoomsAutoWalk",             { Text = "自动 Rooms",       Default = false, Tooltip = "在 The Rooms 中自动移动并躲避实体。" })
-Groupboxes.Floors_Automation:AddSlider("RoomsAutoWalkPathfindTimeout", { Text = "寻路超时", Min = 0.5, Max = 3, Default = 1, Rounding = 1 })
-Groupboxes.Floors_Automation:AddToggle("RoomsAutoWalkIgnoreA60",    { Text = "忽略 A-60",      Default = false, Tooltip = "如果存在实体 'A-60'，继续行走，自动启用位置欺骗。" })
-Groupboxes.Floors_Automation:AddToggle("RoomsAutoWalkShowPathToggle", { Text = "显示路径",       Default = false, Tooltip = "显示当前 rooms 自动行走的路径。" })
+Groupboxes.Floors_Automation:AddToggle("RoomsAutoWalk",             { Text = "自动 Rooms（Rooms）",       Default = false, Tooltip = "在 The Rooms 中自动移动并躲避实体。" })
+Groupboxes.Floors_Automation:AddSlider("RoomsAutoWalkPathfindTimeout", { Text = "寻路超时（Rooms）", Min = 0.5, Max = 3, Default = 1, Rounding = 1 })
+Groupboxes.Floors_Automation:AddToggle("RoomsAutoWalkIgnoreA60",    { Text = "忽略 A-60（Rooms）",      Default = false, Tooltip = "如果存在实体 A-60，继续行走，自动启用位置欺骗。" })
+Groupboxes.Floors_Automation:AddToggle("RoomsAutoWalkShowPathToggle", { Text = "显示路径（Rooms）",       Default = false, Tooltip = "显示当前 rooms 自动行走的路径。" })
 Groupboxes.Floors_Automation:AddToggle("RoomsAutoWalkSpoofFootsteps", {
     Text = "欺骗脚步", Default = false, Tooltip = "让你的角色看起来像正常行走。",
     Disabled = not Functions.CheckCompatability({"hookmetamethod", "newcclosure", "getnamecallmethod"}), DisabledTooltip = Globals.IncompatibleMessage
@@ -2328,9 +2328,9 @@ Connections.RoomsHandler = CurrentRooms.ChildAdded:Connect(function(Room)
 		end
 	end
 end)
-Groupboxes.Floors_Completion = Tabs.Floors:AddRightGroupbox("完成")
+Groupboxes.Floors_Completion = Tabs.Floors:AddRightGroupbox("自动完成任务")
 Groupboxes.Floors_Completion:AddButton({
-    Text = "自动完成水坝 Seek",
+    Text = "自动完成水泵阀门（Mines）",
     Tooltip = "自动传送并与每个水泵交互。",
     Func = function()
         if LatestRoom.Value < 100 or Floor ~= "Mines" then
@@ -2394,8 +2394,8 @@ Groupboxes.Floors_Completion:AddButton({
 })
 
 Groupboxes.Floors_Completion:AddButton({
-    Text = "自动完成 Cringle",
-    Tooltip = "立即完成任务。",
+    Text = "自动完成 Cringle（圣诞Figure50门）",
+    Tooltip = "立即完成礼物收集。",
     Func = function()
         local TouchPart = CurrentRooms:FindFirstChild("RippleExitDoor", true)
         if TouchPart then
@@ -2406,7 +2406,7 @@ Groupboxes.Floors_Completion:AddButton({
 
 Groupboxes.Floors_Visuals = Tabs.Floors:AddLeftGroupbox("视觉")
 Groupboxes.Floors_Visuals:AddToggle("ShowSeekPathToggle", {
-	Text = "显示 Seek 路径", Default = false, Tooltip = "在 Seek 追逐中显示正确路径。",
+	Text = "显示 Seek 路径（Mines）", Default = false, Tooltip = "在 Seek 追逐中显示正确路径。",
 	Risky = Floor ~= "Mines"
 })
 Toggles.ShowSeekPathToggle:AddColorPicker("ShowSeekPathColor", { Text = "Seek 路径", Default = Color3.fromRGB(0, 255, 0), Transparency = 0 })
@@ -2425,7 +2425,7 @@ Toggles.ShowSeekPathToggle:OnChanged(function(V)  UpdateBeamVisibility(Objects.S
 Options.ShowSeekPathColor:OnChanged(function(V)   UpdateBeamColor(Objects.SeekHighlights, V) end)
 
 Groupboxes.Floors_Visuals:AddToggle("ShowEyestalkPathToggle", {
-	Text = "显示 Eyestalk 路径", Default = false, Tooltip = "在 eyestalk 追逐中显示正确路径。",
+	Text = "显示 Eyestalk 路径（Garden）", Default = false, Tooltip = "在 eyestalk 追逐中显示正确路径。",
 	Risky = Floor ~= "Garden"
 })
 Toggles.ShowEyestalkPathToggle:AddColorPicker("ShowEyestalkPathColor", { Text = "Eyestalk 路径", Default = Color3.fromRGB(0, 255, 0), Transparency = 0 })
@@ -2434,21 +2434,21 @@ Options.ShowEyestalkPathColor:OnChanged(function(V)  UpdateBeamColor(Objects.Eye
 
 Groupboxes.Floors_Bypass = Tabs.Floors:AddLeftGroupbox("绕过")
 Groupboxes.Floors_Bypass:AddToggle("RemoveSeekTrigger", {
-	Text = "删除 Seek 触发器", Default = false, Tooltip = "禁用 'Seek' 追逐触发器。",
+	Text = "删除 Seek（Fools，OldHotel）", Default = false, Tooltip = "禁用 'Seek' 追逐触发器。",
 	Risky = not (Floor == "Fools" or Floor == "OldHotel"),
 	Disabled = not Functions.CheckCompatability({"firetouchinterest"}), DisabledTooltip = Globals.IncompatibleMessage
 })
 Groupboxes.Floors_Bypass:AddToggle("RemoveFigure", {
-	Text = "删除 Figure", Default = false, Tooltip = "完全移除实体 'Figure'（不总是有效）。",
+	Text = "删除 Figure（Fools，OldHotel，Mines）", Default = false, Tooltip = "完全移除实体 'Figure'（不总是有效）。",
 	Risky = not (Floor == "Fools" or Floor == "OldHotel" or Floor == "Mines"),
 	Disabled = not Functions.CheckCompatability({"isnetworkowner"}), DisabledTooltip = Globals.IncompatibleMessage
 })
 Groupboxes.Floors_Bypass:AddToggle("AutoRevive", {
-	Text = "无限复活", Default = false, Tooltip = "死亡后自动复活，无限次重生。",
+	Text = "无限复活（Fools，OldHotel）", Default = false, Tooltip = "死亡后自动复活，无限次重生。",
 	Risky = not (Floor == "Fools" or Floor == "OldHotel")
 })
 Groupboxes.Floors_Bypass:AddToggle("FigureGodmode", {
-	Text = "Figure 无敌", Default = false, Tooltip = "防止 'Figure' 伤害你。",
+	Text = "Figure 无敌（Fools，OldHotel）", Default = false, Tooltip = "防止 'Figure' 伤害你。",
 	Risky = not (Floor == "Fools" or Floor == "OldHotel")
 })
 Groupboxes.Floors_Bypass:AddDivider()
@@ -2468,9 +2468,9 @@ for ObjName, ToggleName in ObstructionNames do
 end
 Groupboxes.Floors_Farming = Tabs.Floors:AddLeftGroupbox("刷取")
 Groupboxes.Floors_Farming:AddToggle("KnobFarm", {
-    Text = "Knob 刷取",
+    Text = "knobs 刷取",
     Default = false,
-    Tooltip = "自动为你获取 knobs，反复死亡并复活完成刷取",
+    Tooltip = "自动为你获取 Knobs",
 })
 
 Groupboxes.Floors_Farming:AddButton({
@@ -2498,7 +2498,7 @@ Groupboxes.Floors_Farming:AddDivider()
 Groupboxes.Floors_Farming:AddButton({
 	Text = "开始死亡刷取",
 	DoubleClick = true,
-	Tooltip = "自动刷取死亡，加入新的一局。",
+	Tooltip = "自动刷取死亡。",
 	Func = function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/Abysall/refs/heads/main/Scripts/DeathFarm.luau"))()
 	end,
@@ -2507,14 +2507,14 @@ Groupboxes.Floors_Farming:AddButton({
 	DisabledTooltip = Globals.ImcompatibleMessage
 })
 Groupboxes.Floors_Farming:AddButton({
-	Text = "复制死亡刷取 Loadstring",
+	Text = "复制死亡刷取加载链接",
 	DoubleClick = false,
-	Tooltip = "将死亡刷取 loadstring 复制到剪贴板。",
+	Tooltip = "将死亡刷取加载链接复制到剪贴板。",
 	Func = function()
 		toclipboard([==[
 			loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/Abysall/refs/heads/main/Scripts/DeathFarm.luau"))()
 		]==])
-		Library:Notify("Loadstring 已复制到剪贴板。")
+		Library:Notify("加载链接已复制到剪贴板。")
 	end,
 
 	Disabled = not Functions.CheckCompatability({"fireproximityprompt", "firesignal"}),
@@ -2523,7 +2523,7 @@ Groupboxes.Floors_Farming:AddButton({
 
 Toggles.KnobFarm:OnChanged(function(Value)
     if Value then
-        Functions.Notify({Title = "请收集一些金币来获取 knobs。", Body = "准备好后点击 '开始 Knob 刷取'。"})
+        Functions.Notify({Title = "请收集一些金币以实现knobs刷取功能。", Body = "准备好后点击 '开始 Knob 刷取'。"})
 	else
 		Globals.KnobFarmStarted = false
     end
