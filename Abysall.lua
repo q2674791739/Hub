@@ -2065,11 +2065,11 @@ Toggles.ESPArrowsToggle:OnChanged(function(V)    Abysall.ESPLibrary:SetArrows(V)
 Options.ESPArrowsRadius:OnChanged(function(V)    Abysall.ESPLibrary:SetArrowRadius(V) end)
 Tabs.Floors:UpdateWarningBox({
 	Visible = true,
-	Title = "兼容性警告",
+	Title = "兼容性警告（点击文字查看功能适配楼层）",
 	Text = "红色高亮的功能在当前楼层无法使用",
 })
 
-Groupboxes.Floors_Automation = Tabs.Floors:AddRightGroupbox("自动化（点击文字查看对应楼层）")
+Groupboxes.Floors_Automation = Tabs.Floors:AddRightGroupbox("自动化")
 Groupboxes.Floors_Automation:AddToggle("AutoSteerMinecart", {
 	Text = "自动驾驶矿车", Default = false, Tooltip = "自动完成Mines矿车追逐。",
 	Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage
@@ -2334,7 +2334,7 @@ Groupboxes.Floors_Completion:AddButton({
     Tooltip = "Mines-自动传送并与每个水泵交互。",
     Func = function()
         if LatestRoom.Value < 100 or Floor ~= "Mines" then
-            Functions.Notify({Title = "你必须在 200 号房间才能使用此功能。"})
+            Functions.Notify({Title = "你必须在 200 号房间才能使用此功能"})
             return
         end
 
@@ -2444,7 +2444,7 @@ Groupboxes.Floors_Bypass:AddToggle("RemoveFigure", {
 	Disabled = not Functions.CheckCompatability({"isnetworkowner"}), DisabledTooltip = Globals.IncompatibleMessage
 })
 Groupboxes.Floors_Bypass:AddToggle("AutoRevive", {
-	Text = "无限复活", Default = false, Tooltip = "死亡后自动复活，无限次重生。",
+	Text = "无限复活", Default = false, Tooltip = "Fools，OldHotel–死亡后自动复活，无限次重生。",
 	Risky = not (Floor == "Fools" or Floor == "OldHotel")
 })
 Groupboxes.Floors_Bypass:AddToggle("FigureGodmode", {
@@ -2523,7 +2523,7 @@ Groupboxes.Floors_Farming:AddButton({
 
 Toggles.KnobFarm:OnChanged(function(Value)
     if Value then
-        Functions.Notify({Title = "请收集一些金币以实现knobs刷取功能。", Body = "准备好后点击 '开始 Knob 刷取'。"})
+        Functions.Notify({Title = "请收集一些金币来实现knobs刷取功能。", Body = "准备好后点击 开始 Knob 刷取"})
 	else
 		Globals.KnobFarmStarted = false
     end
