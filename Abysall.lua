@@ -4385,48 +4385,6 @@ Connections.Cleaner = Services.RunService.Heartbeat:Connect(function()
 		end
 	end
 end)
--- ================= 移除特定音效逻辑 =================
-local function IsTargetSound(SoundObj)
-    local muteRain = Toggles.RemoveRainSound.Value
-    local muteDoor = Toggles.RemoveDoorSound.Value
-    if muteRain and (SoundObj.SoundId == "rbxassetid://358496539" or SoundObj.SoundId == "rbxassetid://9145201982") then return true end
-    if muteDoor and (SoundObj.SoundId == "rbxassetid://11447013731" or SoundObj.SoundId == "rbxassetid://11447163904") then return true end
-    return false
-end
-
-local function ApplySoundState(SoundObj)
-    if IsTargetSound(SoundObj) then
-        if SoundObj.Volume > 0 then
-            SoundObj:SetAttribute("OriginalVolume", SoundObj.Volume)
-            SoundObj.Volume = 0
-        end
-    else
-        local orig = SoundObj:GetAttribute("OriginalVolume")
-        if orig then
-            SoundObj.Volume = orig
-            SoundObj:SetAttribute("OriginalVolume", nil)
-        end
-    end
-end
-
-local function RefreshAllSounds()
-    for _, obj in ipairs(Services.Workspace:GetDescendants()) do
-        if obj:IsA("Sound") then ApplySoundState(obj) end
-    end
-end
-
-Toggles.RemoveRainSound:OnChanged(RefreshAllSounds)
-Toggles.RemoveDoorSound:OnChanged(RefreshAllSounds)
-
-Connections.SoundAddedHandler = Services.Workspace.DescendantAdded:Connect(function(Object)
-    if Object:IsA("Sound") then
-        task.wait()
-        ApplySoundState(Object)
-    end
-end)
-
-task.spawn(RefreshAllSounds)
--- ===================================================
 
 local LastPromptFix = tick()
 Connections.PromptFixer = Services.RunService.Heartbeat:Connect(function()
