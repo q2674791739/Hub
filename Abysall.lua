@@ -4084,7 +4084,7 @@ if not Functions.FirePrompt then
 end
 local AutoInteractBlacklist = {
 	HidePrompt=true, RiftPrompt=true, StarRiftPrompt=true, InteractPrompt=true, ClimbPrompt=true,
-	DonatePrompt=true, DialoguePrompt=true, RevivePrompt=true, EnterPrompt=true, AnimatePrompt=true,
+	DonatePrompt=true, DialogPrompt=true，DialoguePrompt=true, RevivePrompt=true, EnterPrompt=true, AnimatePrompt=true,
 	ToolEventPrompt=true, Prompt=true, PropPrompt=true
 }
 
