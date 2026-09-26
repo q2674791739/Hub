@@ -1523,8 +1523,10 @@ Groupboxes.Exploits_Audio = Tabs.Exploits:AddLeftGroupbox("音频")
 Globals.JamMuffle = Services.SoundService:WaitForChild("Main"):FindFirstChild("Jamming") or Instance.new("EqualizerSoundEffect")
 
 Groupboxes.Exploits_Audio:AddToggle("RemoveFootstepSounds",    { Text = "移除脚步声",    Default = false, Tooltip = "移除行走时的声音。" })
-Groupboxes.Exploits_Audio:AddToggle("RemoveJamminMusic",       { Text = "移除 Jammin 音乐",       Default = false, Tooltip = "移除 'Jammin' 修改器的音乐和闷音效果。" })
+Groupboxes.Exploits_Audio:AddToggle("RemoveJamminMusic",       { Text = "移除 Jammin 音乐",       Default = false, Tooltip = "移除 'Jammin' 修改器的音乐" })
 Groupboxes.Exploits_Audio:AddToggle("RemoveInteractingSounds", { Text = "移除交互音效", Default = false, Tooltip = "移除与提示交互时的声音。" })
+Groupboxes.Exploits_Audio:AddToggle("RemoveRainSound",         { Text = "移除窗外风雨/雷声", Default = false, Tooltip = "移除窗外风雨和雷声的环境音效。" })
+Groupboxes.Exploits_Audio:AddToggle("RemoveDoorSound",         { Text = "移除开门/关门声", Default = false, Tooltip = "移除开门和关门的音效。" })
 
 Toggles.RemoveJamminMusic:OnChanged(function(Value)
 	local Jam = Globals.MainUI.Initiator.Main_Game.Health:FindFirstChild("Jam")
