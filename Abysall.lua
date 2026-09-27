@@ -1522,13 +1522,13 @@ end)
 Groupboxes.Exploits_Audio = Tabs.Exploits:AddLeftGroupbox("音频")
 Globals.JamMuffle = Services.SoundService:WaitForChild("Main"):FindFirstChild("Jamming") or Instance.new("EqualizerSoundEffect")
 
-Groupboxes.Exploits_Audio:AddToggle("RemoveFootstepSounds",    { Text = "移除脚步声",    Default = false, Tooltip = "移除行走时的声音。" })
+Groupboxes.Exploits_Audio:AddToggle("RemoveFootstepSounds",    { Text = "移除脚步音效",    Default = false, Tooltip = "移除行走时的声音。" })
 Groupboxes.Exploits_Audio:AddToggle("RemoveJamminMusic",       { Text = "移除 Jammin 音乐",       Default = false, Tooltip = "移除 'Jammin' 修改器的音乐" })
 Groupboxes.Exploits_Audio:AddToggle("RemoveInteractingSounds", { Text = "移除交互音效", Default = false, Tooltip = "移除与提示交互时的声音。" })
-Groupboxes.Exploits_Audio:AddToggle("RemoveRainSound",         { Text = "移除窗外风雨/雷声", Default = false, Tooltip = "移除窗外风雨和雷声的环境音效。" })
-Groupboxes.Exploits_Audio:AddToggle("RemoveDoorSound",         { Text = "移除开门/关门声", Default = false, Tooltip = "移除开门和关门的音效。" })
-Groupboxes.Exploits_Audio:AddToggle("RemoveDrawerSound",       { Text = "移除抽屉开/关声", Default = false, Tooltip = "移除抽屉打开和关闭的声音。" })
-Groupboxes.Exploits_Audio:AddToggle("RemoveMonsterSound",      { Text = "移除怪物音效 (保留Figure脚步)", Default = false, Tooltip = "移除 Eyes、Rush 和 Figure 的部分音效" })
+Groupboxes.Exploits_Audio:AddToggle("RemoveRainSound",         { Text = "移除窗外风雨音效", Default = false, Tooltip = "移除窗外风雨和雷声的环境音效。" })
+Groupboxes.Exploits_Audio:AddToggle("RemoveDoorSound",         { Text = "移除开/关门音效", Default = false, Tooltip = "移除开门和关门的音效。" })
+Groupboxes.Exploits_Audio:AddToggle("RemoveDrawerSound",       { Text = "移除抽屉开/关音效", Default = false, Tooltip = "移除抽屉打开和关闭的声音。" })
+Groupboxes.Exploits_Audio:AddToggle("RemoveMonsterSound",      { Text = "移除怪物音效", Default = false, Tooltip = "移除 Eyes、Rush 和 Figure 的部分音效" })
 
 Toggles.RemoveJamminMusic:OnChanged(function(Value)
 	local Jam = Globals.MainUI.Initiator.Main_Game.Health:FindFirstChild("Jam")
@@ -1558,43 +1558,73 @@ Toggles.RemoveInteractingSounds:OnChanged(function(Value)
     end
 end)
 
--- ================= 移除特定音效逻辑 (带抽屉声版) =================
--- 1. 判断是否是我们要静音的音效
-local function IsTargetSound(SoundObj)
-    local muteRain = Toggles.RemoveRainSound.Value
-    local muteDoor = Toggles.RemoveDoorSound.Value
-    local muteDrawer = Toggles.RemoveDrawerSound.Value
-    local muteMonster = Toggles.RemoveMonsterSound.Value
+-- ================= 移除特定音效逻辑 (表驱动版) =================
+local SoundFilterConfig = {
+    [ "RemoveRainSound" ] = {
+        Name = "风雨声",
+        Ids = {
+            "rbxassetid://358496539",
+            "rbxassetid://9145201982",
+            "rbxassetid://9449995657"
+        }
+    },
+    [ "RemoveDoorSound" ] = {
+        Name = "开门/关门声",
+        Ids = {
+            "rbxassetid://11447013731",
+            "rbxassetid://11447163904",
+            "rbxassetid://7758469482",
+            "rbxassetid://17750116436",
+            "rbxassetid://17717855685",
+            "rbxassetid://92153304013679"
+        }
+    },
+    [ "RemoveDrawerSound" ] = {
+        Name = "抽屉开/关声",
+        Ids = {
+            "rbxassetid://7178552067",
+            "rbxassetid://7178552117"
+        }
+    },
+    [ "RemoveMonsterSound" ] = {
+        Name = "怪物音效",
+        Ids = {
+            -- Eyes / Lookman
+            "rbxassetid://9126209752",
+            "rbxassetid://9145202614",
+            "rbxassetid://9145200783",
+            "rbxassetid://16437807212",
+            
+            -- Rush
+            "rbxassetid://12122196180",
+            
+            -- Figure
+            "rbxassetid://2118376406"
+        }
+    }
+}
 
-    -- 风雨声
-    if muteRain and (SoundObj.SoundId == "rbxassetid://358496539" or SoundObj.SoundId == "rbxassetid://9145201982" or SoundObj.SoundId == "rbxassetid://9449995657") then
-        return true 
+-- 2. 动态构建当前生效的静音列表
+-- 每次开关变化时，重新计算哪些 SoundId 需要被静音
+local ActiveMuteIds = {}
+local function UpdateActiveMuteIds()
+    local NewTable = {}
+    for ToggleName, Config in pairs(SoundFilterConfig) do
+        if Toggles[ToggleName] and Toggles[ToggleName].Value then
+            for _, Id in ipairs(Config.Ids) do
+                NewTable[Id] = true -- 使用字典结构，查找复杂度为 O(1)
+            end
+        end
     end
-    
-    -- 开门声
-    if muteDoor and (SoundObj.SoundId == "rbxassetid://11447013731" or SoundObj.SoundId == "rbxassetid://11447163904" or SoundObj.SoundId == "rbxassetid://7758469482" or SoundObj.SoundId == "rbxassetid://17750116436" or SoundObj.SoundId == "rbxassetid://17717855685" or SoundObj.SoundId == "rbxassetid://92153304013679") then
-        return true 
-    end
-    
-    -- 抽屉开/关声
-    if muteDrawer and (SoundObj.SoundId == "rbxassetid://7178552067" or SoundObj.SoundId == "rbxassetid://7178552117") then
-        return true 
-    end
-    
-    -- 怪物
-    if muteMonster then
-        -- Eyes
-        if SoundObj.SoundId == "rbxassetid://9126209752" or SoundObj.SoundId == "rbxassetid://9145202614" or SoundObj.SoundId == "rbxassetid://9145200783" or SoundObj.SoundId == "rbxassetid://16437807212" then return true end
-        -- Rush
-        if SoundObj.SoundId == "rbxassetid://12122196180" then return true end
-        -- Figure
-        if SoundObj.SoundId == "rbxassetid://2118376406" then return true end
-    end
-
-    return false  -- ← 放到最后
+    ActiveMuteIds = NewTable
 end
 
--- 2. 应用静音或恢复
+-- 3. 判断是否是我们要静音的音效（现在只需要查表）
+local function IsTargetSound(SoundObj)
+    return ActiveMuteIds[SoundObj.SoundId] == true
+end
+
+-- 4. 应用静音或恢复
 local function ApplySoundState(SoundObj)
     if IsTargetSound(SoundObj) then
         if SoundObj.Volume > 0 then
@@ -1610,18 +1640,24 @@ local function ApplySoundState(SoundObj)
     end
 end
 
--- 3. 开关变动时，立刻扫描全图已有声音
+-- 5. 立刻扫描全图已有声音
 local function RefreshAllSounds()
     for _, obj in ipairs(Services.Workspace:GetDescendants()) do
         if obj:IsA("Sound") then ApplySoundState(obj) end
     end
 end
 
-Toggles.RemoveRainSound:OnChanged(RefreshAllSounds)
-Toggles.RemoveDoorSound:OnChanged(RefreshAllSounds)
-Toggles.RemoveDrawerSound:OnChanged(RefreshAllSounds) -- 新增抽屉开关的实时刷新
-Toggles.RemoveMonsterSound:OnChanged(RefreshAllSounds)
--- 4. 监听新生成的声音
+-- 6. 绑定开关事件（自动从表里获取）
+for ToggleName, _ in pairs(SoundFilterConfig) do
+    if Toggles[ToggleName] then
+        Toggles[ToggleName]:OnChanged(function()
+            UpdateActiveMuteIds() -- 重新计算列表
+            RefreshAllSounds()    -- 立刻刷新全图音效
+        end)
+    end
+end
+
+-- 7. 监听新生成的声音
 Connections.SoundAddedHandler = Services.Workspace.DescendantAdded:Connect(function(Object)
     if Object:IsA("Sound") then
         task.wait()
@@ -1629,8 +1665,11 @@ Connections.SoundAddedHandler = Services.Workspace.DescendantAdded:Connect(funct
     end
 end)
 
--- 5. 脚本加载时，立刻扫描一次全图
-task.spawn(RefreshAllSounds)
+-- 8. 脚本加载时，立刻扫描一次全图并初始化
+task.spawn(function()
+    UpdateActiveMuteIds()
+    RefreshAllSounds()
+end)
 -- ===================================================
 
 Groupboxes.Visuals_LeftTab = Tabs.Visuals:AddLeftTabbox("相机 / 效果")
