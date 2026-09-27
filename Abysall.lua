@@ -1538,6 +1538,8 @@ Toggles.RemoveJamminMusic:OnChanged(function(Value)
 end)
 Toggles.RemoveInteractingSounds:OnChanged(function(Value)
     local TargetVolume = Value and 0 or 0.1
+    
+    -- 1. 原有的 UI PromptService 逻辑（保留）
     local Main_Game = Globals.MainUI.Initiator.Main_Game
     local PS = Main_Game:FindFirstChild("PromptServiceHint") or Main_Game:FindFirstChild("PromptService")
     if PS then
@@ -1553,6 +1555,16 @@ Toggles.RemoveInteractingSounds:OnChanged(function(Value)
     local Reminder = Main_Game:FindFirstChild("Reminder")
     if Reminder and Reminder:FindFirstChild("Caption") then
         Reminder.Caption.Volume = TargetVolume
+    end
+    
+    -- 👇 2. 新增：专门针对 PlayerScripts 里的 PromptService.Notification (你刚刚抓到的 3848738542)
+    local PlayerPromptService = LocalPlayer.PlayerScripts:FindFirstChild("PromptService")
+    if PlayerPromptService then
+        for _, v in pairs(PlayerPromptService:GetDescendants()) do
+            if v:IsA("Sound") and v.SoundId == "rbxassetid://3848738542" then
+                v.Volume = TargetVolume
+            end
+        end
     end
 end)
 -- ================= 移除特定音效逻辑 (带抽屉声版) =================
