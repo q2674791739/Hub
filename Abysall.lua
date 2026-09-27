@@ -3802,12 +3802,14 @@ elseif Name == "DoorFake" or Name == "FakeDoor" then
 		end
 		table.insert(Objects.Entities, Object)
 	end
+
 elseif Name == "SideroomSpace" then
 	if Toggles.BypassVacuum.Value then
 		Object:WaitForChild("Collision").CanCollide = true
 		Object:WaitForChild("Collision").CanTouch = false
 	end
 	table.insert(Objects.Entities, Object)
+
 elseif Name == "Snare" then
 	if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Snare"] then Functions.AddESP({ Object = Object, Text = "Snare", Color = Options.EntityESPColor.Value }, true) end
 	for _, Part in Object:GetDescendants() do
@@ -3821,15 +3823,31 @@ elseif Name == "Snare" then
 
 elseif Name == "Water" then
 	if Toggles.BypassWater.Value then
-		Object.CanTouch = false
-	end
-	local WaterConn = Object:GetPropertyChangedSignal("CanTouch"):Connect(function()
-		if Toggles.BypassWater.Value and Object.CanTouch then
-			Object.CanTouch = false
+		local Bridge = Instance.new("Part")
+		Bridge.Name = "WaterBypass"
+		Bridge.Anchored = true          -- 固定不动
+		Bridge.CanCollide = true        -- 可以站立
+		Bridge.CanTouch = false         -- 关键：不可触碰，隔绝水面的触碰伤害
+		Bridge.CanQuery = false         -- 不干扰射线检测
+		Bridge.Transparency = 0.6       -- 半透明，让你知道脚下有板子
+		Bridge.Color = Color3.fromRGB(0, 255, 255)
+		Bridge.Material = Enum.Material.ForceField
+		
+		if Object:IsA("BasePart") then
+			Bridge.Size = Object.Size + Vector3.new(0, 1, 0)
+			Bridge.CFrame = Object.CFrame * CFrame.new(0, 0.5, 0)
+		elseif Object:IsA("Model") then
+			local CF, Size = Object:GetBoundingBox()
+			Bridge.Size = Size + Vector3.new(0, 1, 0)
+			Bridge.CFrame = CF * CFrame.new(0, 0.5, 0)
 		end
-	end)
-	table.insert(Connections, WaterConn)
-	table.insert(Objects.Obstructions, Object)
+		
+		Bridge.Parent = Object
+	
+		table.insert(Objects.SeekBridges, Bridge)
+		table.insert(Objects.Obstructions, Object)
+	end
+	end
 
 	if Object:FindFirstChild("Snare") then
 		Object:WaitForChild("Snare"):WaitForChild("Roots").Transparency = 1
