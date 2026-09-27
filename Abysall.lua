@@ -3477,6 +3477,12 @@ elseif Name == "GardenGateButton" then
     end)
     table.insert(Objects.Objectives, Object)
 
+elseif Name == "ArchivesPackageDeposit" then
+    if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "箱子存放处", Color = Options.ObjectiveESPColor.Value }, true) end
+    table.insert(Objects.Objectives, Object)
+elseif Name == "SalvageChute" then
+    if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "垃圾回收处", Color = Options.ObjectiveESPColor.Value }, true) end
+    table.insert(Objects.Objectives, Object)
 elseif Name == "Ladder" then
 	if Toggles.LadderESPToggle.Value then Functions.AddESP({ Object = Object, Text = "梯子", Color = Options.LadderESPColor.Value }, true) end
 	table.insert(Objects.Ladders, Object)
