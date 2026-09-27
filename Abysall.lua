@@ -1527,6 +1527,7 @@ Groupboxes.Exploits_Audio:AddToggle("RemoveJamminMusic",       { Text = "移除 
 Groupboxes.Exploits_Audio:AddToggle("RemoveInteractingSounds", { Text = "移除交互音效", Default = false, Tooltip = "移除与提示交互时的声音。" })
 Groupboxes.Exploits_Audio:AddToggle("RemoveRainSound",         { Text = "移除窗外风雨/雷声", Default = false, Tooltip = "移除窗外风雨和雷声的环境音效。" })
 Groupboxes.Exploits_Audio:AddToggle("RemoveDoorSound",         { Text = "移除开门/关门声", Default = false, Tooltip = "移除开门和关门的音效。" })
+Groupboxes.Exploits_Audio:AddToggle("RemoveDrawerSound",       { Text = "移除抽屉开/关声", Default = false, Tooltip = "移除抽屉打开和关闭的声音。" })
 
 Toggles.RemoveJamminMusic:OnChanged(function(Value)
 	local Jam = Globals.MainUI.Initiator.Main_Game.Health:FindFirstChild("Jam")
@@ -1554,42 +1555,48 @@ Toggles.RemoveInteractingSounds:OnChanged(function(Value)
         Reminder.Caption.Volume = TargetVolume
     end
 end)
--- ================= 移除特定音效逻辑 (核心版) =================
+-- ================= 移除特定音效逻辑 (带抽屉声版) =================
 -- 1. 判断是否是我们要静音的音效
 local function IsTargetSound(SoundObj)
     local muteRain = Toggles.RemoveRainSound.Value
     local muteDoor = Toggles.RemoveDoorSound.Value
+    local muteDrawer = Toggles.RemoveDrawerSound.Value
     
-    -- 风雨声：包含旧版 ID 和之前扫到的 9449995657
+    -- 风雨声
     if muteRain and (SoundObj.SoundId == "rbxassetid://358496539" or SoundObj.SoundId == "rbxassetid://9145201982" or SoundObj.SoundId == "rbxassetid://9449995657") then
         return true 
     end
     
-    -- 开门声：包含所有已确认的旧版和新增 ID
+    -- 开门声
     if muteDoor and (SoundObj.SoundId == "rbxassetid://11447013731" or SoundObj.SoundId == "rbxassetid://11447163904" or SoundObj.SoundId == "rbxassetid://7758469482" or SoundObj.SoundId == "rbxassetid://17750116436" or SoundObj.SoundId == "rbxassetid://17717855685" or SoundObj.SoundId == "rbxassetid://92153304013679") then
+        return true 
+    end
+    
+    -- 抽屉开/关声（新增）
+    if muteDrawer and (SoundObj.SoundId == "rbxassetid://7178552067" or SoundObj.SoundId == "rbxassetid://7178552117") then
         return true 
     end
     
     return false
 end
 
--- 2. 应用静音或恢复（使用 SetAttribute 备份原音量，保证关闭开关能恢复）
+-- 2. 应用静音或恢复
 local function ApplySoundState(SoundObj)
     if IsTargetSound(SoundObj) then
         if SoundObj.Volume > 0 then
-            SoundObj:SetAttribute("OriginalVolume", SoundObj.Volume) -- 备份原音量
+            SoundObj:SetAttribute("OriginalVolume", SoundObj.Volume)
             SoundObj.Volume = 0
         end
     else
         local orig = SoundObj:GetAttribute("OriginalVolume")
         if orig then
-            SoundObj.Volume = orig -- 恢复原音量
+            SoundObj.Volume = orig
             SoundObj:SetAttribute("OriginalVolume", nil)
         end
     end
 end
 
--- 3. 开关变动时，立刻扫描全图已有声音（这就是“已存在也能处理”的关键）
+-- 3. 开关变动时，立刻扫描全图已有声音
 local function RefreshAllSounds()
     for _, obj in ipairs(Services.Workspace:GetDescendants()) do
         if obj:IsA("Sound") then ApplySoundState(obj) end
@@ -1598,8 +1605,9 @@ end
 
 Toggles.RemoveRainSound:OnChanged(RefreshAllSounds)
 Toggles.RemoveDoorSound:OnChanged(RefreshAllSounds)
+Toggles.RemoveDrawerSound:OnChanged(RefreshAllSounds) -- 新增抽屉开关的实时刷新
 
--- 4. 监听新生成的声音（遇到就处理，不占用性能）
+-- 4. 监听新生成的声音
 Connections.SoundAddedHandler = Services.Workspace.DescendantAdded:Connect(function(Object)
     if Object:IsA("Sound") then
         task.wait()
@@ -1607,9 +1615,10 @@ Connections.SoundAddedHandler = Services.Workspace.DescendantAdded:Connect(funct
     end
 end)
 
--- 5. 脚本加载时，立刻扫描一次全图（处理在脚本加载前就已经存在的声音）
+-- 5. 脚本加载时，立刻扫描一次全图
 task.spawn(RefreshAllSounds)
 -- ===================================================
+
 Groupboxes.Visuals_LeftTab = Tabs.Visuals:AddLeftTabbox("相机 / 效果")
 Groupboxes.Visuals_Camera = Groupboxes.Visuals_LeftTab:AddTab("相机")
 Groupboxes.Visuals_Camera:AddToggle("AmbientToggle", { Text = "环境光", Default = false, Tooltip = "将光照颜色更改为指定值。" })
