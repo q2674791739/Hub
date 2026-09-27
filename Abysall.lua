@@ -3380,7 +3380,74 @@ Functions.HandleHidingTransparency = function(Model)
 		end
 	end
 end
+-- ================= 绕过电水：物理桥逻辑 =================
+Toggles.BypassWater:OnChanged(function(Value)
+    Functions.Notify({Title = "注意：位置欺骗会破坏此功能！"})
+    
+    if Connections.WaterBypassConnection then
+        Connections.WaterBypassConnection:Disconnect()
+        Connections.WaterBypassConnection = nil
+    end
 
+    if Value then
+        local function ProcessWaterBypassRoom(Room)
+            if not tonumber(Room.Name) then return end
+            task.wait(3)
+            
+            local Water = Room:FindFirstChild("Water")
+            if not Water or WaterParts[Water] then return end
+
+            local Bridge = Instance.new("Part")
+            Bridge.Name = "WaterBypass"
+            Bridge.Anchored = true
+            Bridge.CanCollide = true
+            Bridge.CanTouch = false
+            Bridge.CanQuery = false
+            Bridge.Transparency = 0.4
+            Bridge.Color = Color3.fromRGB(0, 150, 255)
+            Bridge.Material = Enum.Material.ForceField
+
+            if Water:IsA("BasePart") then
+                Bridge.Size = Water.Size + Vector3.new(0, 0.5, 0)
+                Bridge.CFrame = Water.CFrame * CFrame.new(0, 0.25, 0)
+            elseif Water:IsA("Model") then
+                local CF, Size = Water:GetBoundingBox()
+                Bridge.Size = Size + Vector3.new(0, 0.5, 0)
+                Bridge.CFrame = CF * CFrame.new(0, 0.25, 0)
+            else
+                Bridge.Size = Vector3.new(10, 1.5, 10)
+                Bridge.CFrame = Water:GetPivot() * CFrame.new(0, 0.25, 0)
+            end
+
+            if Bridge.Size.Y > 3 then
+                Bridge:Destroy()
+                Functions.Notify({Title = "防电水已移除：避免深水区软锁"})
+                return
+            end
+
+            Bridge.Parent = Room
+            WaterParts[Water] = Bridge
+        end
+
+        local LatestRoomNum = tonumber(LatestRoom.Value) or 0
+        for RoomNum = math.max(0, LatestRoomNum - 4), LatestRoomNum do
+            local Room = CurrentRooms:FindFirstChild(tostring(RoomNum))
+            if Room then
+                task.spawn(ProcessWaterBypassRoom, Room)
+            end
+        end
+
+        Connections.WaterBypassConnection = CurrentRooms.ChildAdded:Connect(function(Room)
+            task.spawn(ProcessWaterBypassRoom, Room)
+        end)
+    else
+        for _, Bridge in pairs(WaterParts) do
+            if Bridge then Bridge:Destroy() end
+        end
+        table.clear(WaterParts)
+    end
+end)
+-- =========================================================
 Functions.HandleObject = function(Object)
 	for _, Room in CurrentRooms:GetChildren() do
 		if Object:IsDescendantOf(Room) then
