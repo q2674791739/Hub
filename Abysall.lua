@@ -4387,50 +4387,7 @@ Functions.TriggerPrompt = function(Prompt)
     if Prompt.Parent.Parent and Prompt.Parent.Parent.Name == "ArchivesLargePrinter" then return end
     if Prompt.Parent.Name == "PaperPlanePickup" or Prompt.Parent.Name == "PaperPlane" then return end
     if Prompt.Parent.Name == "StairwellTerminal" then return end
-
-    if Prompt.Parent.Name == "StairwellTerminal" then return end
-
--- ================= 遗忘藤蔓门 无差别强制冷却 + 通知 =================
-local IsForgetMeNotPrompt = false
-if Prompt.Parent then
-    if Prompt.Parent.Name == "ForgetMeNotVineDoors" 
-       or Prompt.Parent:FindFirstAncestor("ForgetMeNotVineDoors") 
-       or Prompt.Name == "EntryPrompt" then
-        IsForgetMeNotPrompt = true
-    end
-end
-
-if IsForgetMeNotPrompt then
-    local currentTime = tick()
-    local lastTrigger = Globals.LastForgetMeNotTrigger or 0
-    local cooldownTime = 2 -- 【已经改成 2 秒】
-
-    if currentTime - lastTrigger < cooldownTime then
-        -- 处于冷却中
-        if not Globals.ForgetMeNotCooldownNotified then
-            Globals.ForgetMeNotCooldownNotified = true
-            local remaining = math.ceil(cooldownTime - (currentTime - lastTrigger))
-            Functions.Notify({
-                Title = "遗望门交互冷却中",
-                Body = "等待服务器刷新门状态 (" .. remaining .. "秒)..."
-            })
-        end
-        return -- 直接无视，跳过交互
-    end
-    
-    -- 冷却结束，重置通知标记
-    if Globals.ForgetMeNotCooldownNotified then
-        Globals.ForgetMeNotCooldownNotified = false
-    end
-    
-    -- 记录触发时间，开启新一轮冷却
-    Globals.LastForgetMeNotTrigger = currentTime
-end
--- ======================================================================
-
--- 保留原有的 _GateDisabled 属性过滤
-if Prompt:GetAttribute("_GateDisabled") == true then return end
-  --  if Prompt:GetAttribute("_GateDisabled") == true then return end
+    if Prompt:GetAttribute("_GateDisabled") == true then return end
 
 	local ParentItem = Functions.HasItem(Prompt.Parent.Name)
 	if ParentItem and ParentItem:GetAttribute("Durability") and ParentItem:GetAttribute("DurabilityMax")
