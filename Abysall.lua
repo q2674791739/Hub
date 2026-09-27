@@ -3398,21 +3398,24 @@ Toggles.BypassWater:OnChanged(function(Value)
         if Barrier and Barrier.Parent then Barrier:Destroy() end
     end
     table.clear(WaterParts)
+    Globals.WaterNotifiedRooms = {} 
 
     if Value then
         local function ProcessWaterPuddle(Puddle)
             if not Puddle:IsA("BasePart") then return end
             local Pool = Puddle.Parent
             if not Pool or not Pool:IsA("Model") then return end
+            local Water = Pool.Parent
+            local Room = Water and Water.Parent
+            if not Room then return end
+
             if Puddle:GetAttribute("Abysall_Barrier_Setup") then return end
             Puddle:SetAttribute("Abysall_Barrier_Setup", true)
 
             local BarrierName = "Abysall_DynamicBarrier"
-            
-            -- 通知防抖标记（只在状态变化时提醒一次）
-            local HasNotifiedDanger = false
-            local HasNotifiedSafe = false
+            local HasTeleported = false -- 防止同一水坑反复传送
 
+            -- 核心判定：有没有电
             local function IsPuddleDangerous()
                 if Pool:GetAttribute("Electrified") == true then return true end
                 if Puddle:GetAttribute("Electrified") == true then return true end
@@ -3423,11 +3426,40 @@ Toggles.BypassWater:OnChanged(function(Value)
                 return false
             end
 
+            -- 安全传送函数
+            local function TryTeleportToSafety()
+                if HasTeleported then return end
+                if not Character or not RootPart then return end
+
+                local PlayerPos = Vector3.new(RootPart.Position.X, Puddle.Position.Y, RootPart.Position.Z)
+                local PuddlePos = Vector3.new(Puddle.Position.X, Puddle.Position.Y, Puddle.Position.Z)
+                local DistToPuddle = (PlayerPos - PuddlePos).Magnitude
+                
+                if DistToPuddle < math.max(Puddle.Size.X, Puddle.Size.Z) then
+                    HasTeleported = true
+                    local SafeCFrame
+                    local RoomEntrance = Room:FindFirstChild("RoomExit") or Room:FindFirstChild("Door")
+                    
+                    if RoomEntrance then
+                        SafeCFrame = RoomEntrance:GetPivot()
+                    else
+                        local PushDir = (RootPart.Position - Puddle.Position).Unit
+                        if PushDir.Magnitude < 0.1 then PushDir = Vector3.new(0, 0, 1) end
+                        SafeCFrame = RootPart.CFrame + (PushDir * 15)
+                    end
+                    
+                    Character:PivotTo(SafeCFrame)
+                    Functions.Notify({Title = "危险！已自动将你传送出电水区域。"})
+                end
+            end
+
             local function UpdateBarrier()
                 local ExistingBarrier = Puddle:FindFirstChild(BarrierName)
                 local Dangerous = IsPuddleDangerous()
 
                 if Dangerous then
+                    TryTeleportToSafety()
+                    
                     if not ExistingBarrier then
                         local Barrier = Instance.new("Part")
                         Barrier.Name = BarrierName
@@ -3446,9 +3478,8 @@ Toggles.BypassWater:OnChanged(function(Value)
                         WaterParts[Puddle] = Barrier
                     end
                     
-                    if not HasNotifiedDanger then
-                        HasNotifiedDanger = true
-                        HasNotifiedSafe = false
+                    if Globals.WaterNotifiedRooms[Room] ~= "Danger" then
+                        Globals.WaterNotifiedRooms[Room] = "Danger"
                         Functions.Notify({Title = "电水预警/激活，屏障已升起！"})
                     end
                 else
@@ -3457,9 +3488,8 @@ Toggles.BypassWater:OnChanged(function(Value)
                         WaterParts[Puddle] = nil
                     end
                     
-                    if not HasNotifiedSafe then
-                        HasNotifiedSafe = true
-                        HasNotifiedDanger = false
+                    if Globals.WaterNotifiedRooms[Room] ~= "Safe" then
+                        Globals.WaterNotifiedRooms[Room] = "Safe"
                         Functions.Notify({Title = "电水安全，屏障已移除。"})
                     end
                 end
@@ -3477,9 +3507,7 @@ Toggles.BypassWater:OnChanged(function(Value)
                 UpdateBarrier()
             end)
             table.insert(Connections, LoopConn)
-        end
-
-        -- 只扫描当前房间的水坑
+			end
         local function ScanOnlyCurrentRoom()
             local CurrentRoomNum = tonumber(LocalPlayer:GetAttribute("CurrentRoom"))
             if not CurrentRoomNum then return end
@@ -3487,11 +3515,11 @@ Toggles.BypassWater:OnChanged(function(Value)
             local Room = CurrentRooms:FindFirstChild(tostring(CurrentRoomNum))
             if not Room then return end
 
-            -- 清理之前房间留下的屏障，防止跨房间残留
             for _, Barrier in pairs(WaterParts) do
                 if Barrier and Barrier.Parent then Barrier:Destroy() end
             end
             table.clear(WaterParts)
+            Globals.WaterNotifiedRooms = {}
 
             local Water = Room:FindFirstChild("Water")
             if not Water then return end
@@ -3503,21 +3531,19 @@ Toggles.BypassWater:OnChanged(function(Value)
             end
         end
 
-        -- 玩家进入当前房间时立刻扫描一次
         ScanOnlyCurrentRoom()
 
-        -- 监听玩家切换房间（进入新房间时自动清理旧屏障并扫描新房间）
         Connections.WaterRoomConnection = LocalPlayer:GetAttributeChangedSignal("CurrentRoom"):Connect(function()
-            task.wait(0.5) -- 等新房间的 Water 加载出来
+            task.wait(0.5)
             ScanOnlyCurrentRoom()
         end)
 
     else
-        -- 关闭开关时清理所有屏障
         for _, Barrier in pairs(WaterParts) do
             if Barrier then Barrier:Destroy() end
         end
         table.clear(WaterParts)
+        Globals.WaterNotifiedRooms = {}
     end
 end)
 
