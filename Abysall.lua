@@ -2575,6 +2575,12 @@ Groupboxes.Floors_Bypass:AddToggle("FigureGodmode", {
 	Text = "Figure 无敌", Default = false, Tooltip = "Fools，OldHotel-防止 Figure 伤害你。",
 	Risky = not (Floor == "Fools" or Floor == "OldHotel")
 })
+Groupboxes.Floors_Bypass:AddToggle("BypassWater", {
+	Text = "绕过电水",
+	Default = false,
+	Tooltip = "防止电水伤害你。注意：使用此功能时不要开启位置欺骗！",
+	Risky = Floor ~= "Archives"
+})
 Groupboxes.Floors_Bypass:AddDivider()
 Groupboxes.Floors_Bypass:AddToggle("RemoveBasementGate",  { Text = "移除地下室门",   Default = false, Tooltip = "Fools，OldHotel-移除地下室房间的门。",            Risky = not (Floor == "Fools" or Floor == "OldHotel") })
 Groupboxes.Floors_Bypass:AddToggle("RemovePaintingsDoor", { Text = "移除画门",  Default = false, Tooltip = "Fools，OldHotel-移除画室的壁炉门。", Risky = not (Floor == "Fools" or Floor == "OldHotel") })
