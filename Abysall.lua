@@ -3896,34 +3896,7 @@ elseif Name == "Snare" then
 	if Object:FindFirstChild("Void") then
 		Object.Void.Transparency = 0
 		Object.Void.Color = Color3.fromRGB(76, 67, 55)
-	end
-
-elseif Name == "Water" then
-	if Toggles.BypassWater.Value then
-		local Bridge = Instance.new("Part")
-		Bridge.Name = "WaterBypass"
-		Bridge.Anchored = true          -- 固定不动
-		Bridge.CanCollide = true        -- 可以站立
-		Bridge.CanTouch = false         -- 关键：不可触碰，隔绝水面的触碰伤害
-		Bridge.CanQuery = false         -- 不干扰射线检测
-		Bridge.Transparency = 0.6       -- 半透明，让你知道脚下有板子
-		Bridge.Color = Color3.fromRGB(0, 255, 255)
-		Bridge.Material = Enum.Material.ForceField
-		
-		if Object:IsA("BasePart") then
-			Bridge.Size = Object.Size + Vector3.new(0, 1, 0)
-			Bridge.CFrame = Object.CFrame * CFrame.new(0, 0.5, 0)
-		elseif Object:IsA("Model") then
-			local CF, Size = Object:GetBoundingBox()
-			Bridge.Size = Size + Vector3.new(0, 1, 0)
-			Bridge.CFrame = CF * CFrame.new(0, 0.5, 0)
-		end
-		
-		Bridge.Parent = Object
-	
-		table.insert(Objects.SeekBridges, Bridge)
-		table.insert(Objects.Obstructions, Object)
-	end
+	end 
 
 elseif Name == "Seek_Arm" or Name == "ChandelierObstruction" then
 	for _, Part in Object:GetDescendants() do
@@ -3932,7 +3905,6 @@ elseif Name == "Seek_Arm" or Name == "ChandelierObstruction" then
 			table.insert(Objects.SeekObstructions, Part)
 		end
 		end
-
 	
 elseif Name == "SeekFloodline" then
 	Object.CanCollide = Toggles.BypassSeekObstructions.Value
