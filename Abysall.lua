@@ -1528,6 +1528,7 @@ Groupboxes.Exploits_Audio:AddToggle("RemoveInteractingSounds", { Text = "移除�
 Groupboxes.Exploits_Audio:AddToggle("RemoveRainSound",         { Text = "移除窗外风雨/雷声", Default = false, Tooltip = "移除窗外风雨和雷声的环境音效。" })
 Groupboxes.Exploits_Audio:AddToggle("RemoveDoorSound",         { Text = "移除开门/关门声", Default = false, Tooltip = "移除开门和关门的音效。" })
 Groupboxes.Exploits_Audio:AddToggle("RemoveDrawerSound",       { Text = "移除抽屉开/关声", Default = false, Tooltip = "移除抽屉打开和关闭的声音。" })
+Groupboxes.Exploits_Audio:AddToggle("RemoveMonsterSound",      { Text = "移除怪物音效 (保留Figure脚步)", Default = false, Tooltip = "移除 Eyes、Rush 和 Figure 的部分音效" })
 
 Toggles.RemoveJamminMusic:OnChanged(function(Value)
 	local Jam = Globals.MainUI.Initiator.Main_Game.Health:FindFirstChild("Jam")
@@ -1563,7 +1564,8 @@ local function IsTargetSound(SoundObj)
     local muteRain = Toggles.RemoveRainSound.Value
     local muteDoor = Toggles.RemoveDoorSound.Value
     local muteDrawer = Toggles.RemoveDrawerSound.Value
-    
+    local muteMonster = Toggles.RemoveMonsterSound.Value
+	
     -- 风雨声
     if muteRain and (SoundObj.SoundId == "rbxassetid://358496539" or SoundObj.SoundId == "rbxassetid://9145201982" or SoundObj.SoundId == "rbxassetid://9449995657") then
         return true 
@@ -1580,7 +1582,15 @@ local function IsTargetSound(SoundObj)
     end
     
     return false
-end
+	-- 怪物
+    if muteMonster then
+    -- Eyes
+    if SoundObj.SoundId == "rbxassetid://9126209752" or SoundObj.SoundId == "rbxassetid://9145202614" or SoundObj.SoundId == "rbxassetid://9145200783" or SoundObj.SoundId == "rbxassetid://16437807212" then return true end
+    -- Rush
+    if SoundObj.SoundId == "rbxassetid://12122196180" then return true end
+    -- Figure (头部点击声，保留脚步声 8465836233)
+    if SoundObj.SoundId == "rbxassetid://2118376406" then return true end
+	end
 
 -- 2. 应用静音或恢复
 local function ApplySoundState(SoundObj)
@@ -1608,7 +1618,7 @@ end
 Toggles.RemoveRainSound:OnChanged(RefreshAllSounds)
 Toggles.RemoveDoorSound:OnChanged(RefreshAllSounds)
 Toggles.RemoveDrawerSound:OnChanged(RefreshAllSounds) -- 新增抽屉开关的实时刷新
-
+Toggles.RemoveMonsterSound:OnChanged(RefreshAllSounds)
 -- 4. 监听新生成的声音
 Connections.SoundAddedHandler = Services.Workspace.DescendantAdded:Connect(function(Object)
     if Object:IsA("Sound") then
