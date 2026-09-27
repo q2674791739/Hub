@@ -1565,7 +1565,7 @@ local function IsTargetSound(SoundObj)
     local muteDoor = Toggles.RemoveDoorSound.Value
     local muteDrawer = Toggles.RemoveDrawerSound.Value
     local muteMonster = Toggles.RemoveMonsterSound.Value
-	
+
     -- 风雨声
     if muteRain and (SoundObj.SoundId == "rbxassetid://358496539" or SoundObj.SoundId == "rbxassetid://9145201982" or SoundObj.SoundId == "rbxassetid://9449995657") then
         return true 
@@ -1576,21 +1576,23 @@ local function IsTargetSound(SoundObj)
         return true 
     end
     
-    -- 抽屉开/关声（新增）
+    -- 抽屉开/关声
     if muteDrawer and (SoundObj.SoundId == "rbxassetid://7178552067" or SoundObj.SoundId == "rbxassetid://7178552117") then
         return true 
     end
     
-    return false
-	-- 怪物
+    -- 怪物
     if muteMonster then
-    -- Eyes
-    if SoundObj.SoundId == "rbxassetid://9126209752" or SoundObj.SoundId == "rbxassetid://9145202614" or SoundObj.SoundId == "rbxassetid://9145200783" or SoundObj.SoundId == "rbxassetid://16437807212" then return true end
-    -- Rush
-    if SoundObj.SoundId == "rbxassetid://12122196180" then return true end
-    -- Figure (头部点击声，保留脚步声 8465836233)
-    if SoundObj.SoundId == "rbxassetid://2118376406" then return true end
-	end
+        -- Eyes
+        if SoundObj.SoundId == "rbxassetid://9126209752" or SoundObj.SoundId == "rbxassetid://9145202614" or SoundObj.SoundId == "rbxassetid://9145200783" or SoundObj.SoundId == "rbxassetid://16437807212" then return true end
+        -- Rush
+        if SoundObj.SoundId == "rbxassetid://12122196180" then return true end
+        -- Figure
+        if SoundObj.SoundId == "rbxassetid://2118376406" then return true end
+    end
+
+    return false  -- ← 放到最后
+end
 
 -- 2. 应用静音或恢复
 local function ApplySoundState(SoundObj)
