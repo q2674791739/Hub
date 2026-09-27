@@ -28,7 +28,6 @@ local Groupboxes = {}
 local FakePrompts = {}
 local Functions = {}
 local PartProperties = {}
-local WaterParts = {}
 
 local Objects = {
 	Prompts = {},
