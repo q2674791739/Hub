@@ -1590,13 +1590,13 @@ local SoundFilterConfig = {
         Name = "怪物音效",
         Ids = {
             -- Eyes / Lookman
-            rbxassetid://9145200783
-            rbxassetid://6305809364
-            rbxassetid://9126213993
-            rbxassetid://1168009240
-            rbxassetid://1643780712
-            rbxassetid://9126209752
-            rbxassetid://9145202614
+            "rbxassetid://9145200783",
+            "rbxassetid://6305809364",
+            "rbxassetid://9126213993",
+            "rbxassetid://1168009240",
+            "rbxassetid://1643780712",
+            "rbxassetid://9126209752",
+            "rbxassetid://9145202614",
             
             -- Rush
             "rbxassetid://12122196180",
