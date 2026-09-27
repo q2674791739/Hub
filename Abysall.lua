@@ -4246,7 +4246,7 @@ Functions.TriggerPrompt = function(Prompt)
     if Prompt.Parent.Parent and Prompt.Parent.Parent.Name == "ArchivesLargePrinter" then return end
     if Prompt.Parent.Name == "PaperPlanePickup" or Prompt.Parent.Name == "PaperPlane" then return end
     if Prompt.Parent.Name == "StairwellTerminal" then return end
-    if Prompt.Parent.Parent and Prompt.Parent.Parent:GetAttribute("LoadModule") == "ForgetMeNotBlockage" then return end
+    if Prompt:GetAttribute("_GateDisabled") == true then return end
 
 	local ParentItem = Functions.HasItem(Prompt.Parent.Name)
 	if ParentItem and ParentItem:GetAttribute("Durability") and ParentItem:GetAttribute("DurabilityMax")
