@@ -160,7 +160,7 @@ local ItemNames = {
 	["StarVial"]          = "小星光瓶",
 	["StarBottle"]        = "星光瓶",
 	["StarJug"]           = "星光桶",
-	["Shakelight"]        = "手电筒（晃动）",
+	["Shakelight"]        = "手电筒（摇动）",
 	["Straplight"]        = "绑带灯",
 	["Bulklight"]         = "聚光灯",
 	["Battery"]           = "电池",
@@ -193,7 +193,7 @@ local ItemNames = {
 	["BigBomb"]           = "大炸弹",
 	["SnakeBox"]          = "躲藏箱",
 	["GoldGun"]           = "黄金左轮",
-	["StopSign"]          = "停车标志",
+	["StopSign"]          = "停止标志",
 	["TipJar"]            = "小费罐",
 	["Lantern"]           = "灯笼",
 	["IronKey"]           = "铁钥匙",
@@ -212,7 +212,8 @@ local ItemNames = {
 	["BoxingGloves"]      = "拳击手套",
     ["PaperPlane"]        = "纸飞机",
     ["FihFlakes"]         = "鱼片",
-
+    ["SallyToyObtain"]    = "小黑马",
+    ["SecretCD"]          = "光盘",
 }
 
 local CutsceneNames = {
