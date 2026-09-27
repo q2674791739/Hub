@@ -3821,6 +3821,15 @@ elseif Name == "Snare" then
 	table.insert(Connections, Connection)
 	table.insert(Objects.Entities, Object)
 
+	if Object:FindFirstChild("Snare") then
+		Object:WaitForChild("Snare"):WaitForChild("Roots").Transparency = 1
+		Object:WaitForChild("Snare"):WaitForChild("SnareBase").Transparency = 1
+	end
+	if Object:FindFirstChild("Void") then
+		Object.Void.Transparency = 0
+		Object.Void.Color = Color3.fromRGB(76, 67, 55)
+	end
+
 elseif Name == "Water" then
 	if Toggles.BypassWater.Value then
 		local Bridge = Instance.new("Part")
@@ -3847,23 +3856,16 @@ elseif Name == "Water" then
 		table.insert(Objects.SeekBridges, Bridge)
 		table.insert(Objects.Obstructions, Object)
 	end
-	end
 
-	if Object:FindFirstChild("Snare") then
-		Object:WaitForChild("Snare"):WaitForChild("Roots").Transparency = 1
-		Object:WaitForChild("Snare"):WaitForChild("SnareBase").Transparency = 1
-	end
-	if Object:FindFirstChild("Void") then
-		Object.Void.Transparency = 0
-		Object.Void.Color = Color3.fromRGB(76, 67, 55)
-	end
 elseif Name == "Seek_Arm" or Name == "ChandelierObstruction" then
 	for _, Part in Object:GetDescendants() do
 		if Part:IsA("BasePart") then
 			Part.CanTouch = not Toggles.BypassSeekObstructions.Value
 			table.insert(Objects.SeekObstructions, Part)
 		end
-	end
+		end
+
+	
 elseif Name == "SeekFloodline" then
 	Object.CanCollide = Toggles.BypassSeekObstructions.Value
 	local FloodConn = Object:GetPropertyChangedSignal("CanCollide"):Connect(function()
