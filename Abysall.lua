@@ -3436,20 +3436,33 @@ elseif Name == "FuseObtain" then
 		Functions.BlacklistESP(Object)
 	end)
 	table.insert(Objects.Objectives, Object)
+
 elseif Name == "MinesGateButton" then
-	if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "按钮", Color = Options.ObjectiveESPColor.Value }, true) end
-	Object.Parent:WaitForChild("MinesGate").Main.SoundOpen.Played:Once(function()
-		Functions.RemoveESP(Object)
-		Functions.BlacklistESP(Object)
-	end)
-	table.insert(Objects.Objectives, Object)
+    if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "按钮", Color = Options.ObjectiveESPColor.Value }, true) end
+    Object.Parent:WaitForChild("MinesGate").Main.SoundOpen.Played:Once(function()
+        Functions.RemoveESP(Object)
+        Functions.BlacklistESP(Object)
+        local prompt = Object:FindFirstChildWhichIsA("ProximityPrompt", true)
+        if prompt then
+            prompt.Enabled = false
+            prompt:Destroy()
+        end
+    end)
+    table.insert(Objects.Objectives, Object)
+
 elseif Name == "GardenGateButton" then
-	if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "按钮", Color = Options.ObjectiveESPColor.Value }, true) end
-	Object.Parent:WaitForChild("GardenGate").Collision.Sound.Played:Once(function()
-		Functions.RemoveESP(Object)
-		Functions.BlacklistESP(Object)
-	end)
-	table.insert(Objects.Objectives, Object)
+    if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "按钮", Color = Options.ObjectiveESPColor.Value }, true) end
+    Object.Parent:WaitForChild("GardenGate").Collision.Sound.Played:Once(function()
+        Functions.RemoveESP(Object)
+        Functions.BlacklistESP(Object)
+        local prompt = Object:FindFirstChildWhichIsA("ProximityPrompt", true)
+        if prompt then
+            prompt.Enabled = false
+            prompt:Destroy()
+        end
+    end)
+    table.insert(Objects.Objectives, Object)
+
 elseif Name == "Ladder" then
 	if Toggles.LadderESPToggle.Value then Functions.AddESP({ Object = Object, Text = "梯子", Color = Options.LadderESPColor.Value }, true) end
 	table.insert(Objects.Ladders, Object)
