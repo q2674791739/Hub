@@ -4028,7 +4028,8 @@ local AllowedInstances = {
 	MovingDoor=true, StardustPickup=true, Hole=true, Groundskeeper=true, MandrakeLive=true,
 	GardenGateButton=true, LotusPetalPickup=true, VineGuillotine=true, LiveEntityBramble=true,
 	RiftSpawn=true, ElevatorBreaker=true, RunnerNodes=true, PathLights=true, DuckBoard=true,
-	Padlock=true, EyestalkEndCutscene=true, MinecartRig=true, SeekMovingNewClone=true
+	Padlock=true, EyestalkEndCutscene=true, MinecartRig=true, SeekMovingNewClone=true, 
+    ArchivesPackageDeposit=true, SalvageChute=true
 }
 
 Functions.QueueObject = function(Object)
