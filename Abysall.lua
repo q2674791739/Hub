@@ -3819,6 +3819,18 @@ elseif Name == "Snare" then
 	table.insert(Connections, Connection)
 	table.insert(Objects.Entities, Object)
 
+elseif Name == "Water" then
+	if Toggles.BypassWater.Value then
+		Object.CanTouch = false
+	end
+	local WaterConn = Object:GetPropertyChangedSignal("CanTouch"):Connect(function()
+		if Toggles.BypassWater.Value and Object.CanTouch then
+			Object.CanTouch = false
+		end
+	end)
+	table.insert(Connections, WaterConn)
+	table.insert(Objects.Obstructions, Object)
+
 	if Object:FindFirstChild("Snare") then
 		Object:WaitForChild("Snare"):WaitForChild("Roots").Transparency = 1
 		Object:WaitForChild("Snare"):WaitForChild("SnareBase").Transparency = 1
