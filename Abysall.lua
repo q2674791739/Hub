@@ -1870,6 +1870,8 @@ local ObjectiveLabels = {
 	["LeverForGate"]           = "拉杆",
 	["MinesGateButton"]        = "门按钮",
 	["GardenGateButton"]       = "门按钮",
+    ["ArchivesPackageDeposit"] = "箱子存放处",
+    ["SalvageChute"]           = "垃圾回收处",
 }
 
 Toggles.ObjectiveESPToggle:OnChanged(function(Value)
