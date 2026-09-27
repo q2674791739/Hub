@@ -3381,87 +3381,121 @@ Functions.HandleHidingTransparency = function(Model)
 end
 
 Toggles.BypassWater:OnChanged(function(Value)
-    Functions.Notify({Title = "注意：位置欺骗会破坏此功能！"})
+    Functions.Notify({Title = "绕过电水功能已启用"})
     
-    -- 清理旧连接
     if Connections.WaterBypassConnection then
         Connections.WaterBypassConnection:Disconnect()
         Connections.WaterBypassConnection = nil
     end
 
     if Value then
-        local function ProcessWaterPuddle(Puddle)
-            if not Puddle:IsA("BasePart") or not Puddle:HasTag("CurrentsPuddle") then return end
-            
-            local function UpdateDynamicBarrier()
-                local BarrierName = "Abysall_DynamicBarrier"
-                local ExistingBarrier = Puddle:FindFirstChild(BarrierName)
-                local IsElectrified = Puddle:GetAttribute("Electrified")
+        local function ProcessWaterBarrier(Water)
+            if not Water or Water:GetAttribute("Abysall_Barrier_Setup") then return end
+            Water:SetAttribute("Abysall_Barrier_Setup", true)
 
-                if IsElectrified then
-                    -- 电流出现，生成阻挡墙
+            local BarrierName = "Abysall_DynamicBarrier"
+
+            -- 核心判定：预警音效 + 火花特效 + 属性，只要有一个是真的，就说明危险！
+            local function IsWaterDangerous()
+                -- 1. 检查 Electrified 属性
+                if Water:GetAttribute("Electrified") == true then return true end
+                
+                -- 2. 检查子物体：音效、火花、属性
+                for _, child in ipairs(Water:GetDescendants()) do
+                    if child:GetAttribute("Electrified") == true then return true end
+                    
+                    -- 预警音效（提前出现，给我们反应时间）
+                    if child.Name == "SparksSound" and child:IsA("Sound") and child.Playing then
+                        return true 
+                    end
+                    -- 火花特效（真伤害判定）
+                    if child.Name == "SparkParticles" and child:IsA("ParticleEmitter") and child.Enabled then
+                        return true
+                    end
+                end
+                return false
+            end
+
+            local function UpdateBarrier()
+                local ExistingBarrier = Water:FindFirstChild(BarrierName)
+                local Dangerous = IsWaterDangerous()
+
+                if Dangerous then
+                    -- 危险！生成无法越过的透明屏障
                     if not ExistingBarrier then
                         local Barrier = Instance.new("Part")
                         Barrier.Name = BarrierName
                         Barrier.Anchored = true
-                        Barrier.CanCollide = true -- 关键：让玩家无法走进水域
+                        Barrier.CanCollide = true
                         Barrier.CanQuery = false
                         Barrier.CanTouch = false
-                        Barrier.Transparency = 1 -- 完全隐形
+                        Barrier.Transparency = 0.7
+                        Barrier.Color = Color3.fromRGB(255, 50, 50)
+                        Barrier.Material = Enum.Material.ForceField
+
+                        local CF, Size
+                        if Water:IsA("BasePart") then
+                            CF = Water.CFrame
+                            Size = Water.Size
+                        else
+                            CF, Size = Water:GetBoundingBox()
+                        end
+
+                        Barrier.Size = Size + Vector3.new(4, 30, 4)
+                        Barrier.CFrame = CF * CFrame.new(0, 15, 0)
                         
-                        -- 墙壁大小：比水面大一点，高度拉高，防止玩家跳过去
-                        Barrier.Size = Puddle.Size + Vector3.new(2, 10, 2)
-                        Barrier.CFrame = Puddle.CFrame * CFrame.new(0, 5, 0)
-                        
-                        Barrier.Parent = Puddle
-                        table.insert(WaterParts, Barrier)
-                        Functions.Notify({Title = "电流激活，已生成阻挡墙"})
+                        Barrier.Parent = Water
+                        WaterParts[Water] = Barrier
+                        Functions.Notify({Title = "电水预警/激活，屏障已升起！"})
                     end
                 else
-                    -- 电流消失，移除阻挡墙
+                    -- 安全！拆除屏障
                     if ExistingBarrier then
                         ExistingBarrier:Destroy()
-                        local idx = table.find(WaterParts, ExistingBarrier)
-                        if idx then table.remove(WaterParts, idx) end
-                        Functions.Notify({Title = "电流消失，阻挡墙已移除"})
+                        WaterParts[Water] = nil
+                        Functions.Notify({Title = "电水安全，屏障已移除。"})
                     end
                 end
             end
 
-            -- 立即检查一次当前状态
-            UpdateDynamicBarrier()
-            
-            -- 监听 Electrified 属性变化
-            local AttrConn = Puddle:GetAttributeChangedSignal("Electrified"):Connect(UpdateDynamicBarrier)
-            table.insert(Connections, AttrConn)
+            UpdateBarrier()
+
+            if Water:IsA("Model") then
+                for _, child in ipairs(Water:GetDescendants()) do
+                    if child:GetAttribute("Electrified") ~= nil then
+                        table.insert(Connections, child:GetAttributeChangedSignal("Electrified"):Connect(UpdateBarrier))
+                    end
+                end
+            end
+
+            -- 每帧检查，确保网卡时不漏掉音效和火花的开启/关闭
+            local LoopConn
+            LoopConn = Services.RunService.Heartbeat:Connect(function()
+                if not Water or not Water.Parent then
+                    if LoopConn then LoopConn:Disconnect() end
+                    return
+                end
+                UpdateBarrier()
+            end)
+            table.insert(Connections, LoopConn)
         end
 
-        -- 扫描当前房间和后续新房间的所有水坑
         local function ScanRoom(Room)
             local Water = Room:FindFirstChild("Water")
-            if Water then
-                for _, child in ipairs(Water:GetDescendants()) do
-                    if child.Name == "Puddle" or child:HasTag("CurrentsPuddle") then
-                        task.spawn(ProcessWaterPuddle, child)
-                    end
-                end
-            end
+            if Water then task.spawn(ProcessWaterBarrier, Water) end
         end
 
-        -- 立即扫描最近 4 个房间
         local LatestRoomNum = tonumber(LatestRoom.Value) or 0
         for RoomNum = math.max(0, LatestRoomNum - 4), LatestRoomNum do
             local Room = CurrentRooms:FindFirstChild(tostring(RoomNum))
             if Room then ScanRoom(Room) end
         end
 
-        -- 监听新房间
         Connections.WaterBypassConnection = CurrentRooms.ChildAdded:Connect(function(Room)
-            task.wait(3) -- 等房间加载
+            task.wait(3)
             ScanRoom(Room)
         end)
     else
-        -- 关掉开关时清理所有墙
         for _, Barrier in pairs(WaterParts) do
             if Barrier then Barrier:Destroy() end
         end
