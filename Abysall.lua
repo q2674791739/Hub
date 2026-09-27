@@ -3395,22 +3395,21 @@ Toggles.BypassWater:OnChanged(function(Value)
     table.clear(WaterParts)
 
     if Value then
-        local function ProcessWaterBypassRoom(Room)
-            if not tonumber(Room.Name) then return end
-            task.wait(3) -- 等房间加载完
-            
-            local Water = Room:FindFirstChild("Water")
-            if not Water or Water:GetAttribute("Abysall_Bridge_Setup") then return end
-            Water:SetAttribute("Abysall_Bridge_Setup", true)
+        local function ProcessWaterPuddle(Puddle)
+            if not Puddle:IsA("BasePart") then return end
+            local Pool = Puddle.Parent -- Pool1, Pool2 等
+            if not Pool or not Pool:IsA("Model") then return end
+            if Puddle:GetAttribute("Abysall_Barrier_Setup") then return end
+            Puddle:SetAttribute("Abysall_Barrier_Setup", true)
 
-            local BarrierName = "WaterBypass"
+            local BarrierName = "Abysall_DynamicBarrier"
 
-            -- 危险判定：有电 = true
-            local function IsWaterDangerous()
-                if Water:GetAttribute("Electrified") == true then return true end
+            -- 核心判定：检查父级Pool的Electrified属性，或者水坑的火花特效
+            local function IsPuddleDangerous()
+                if Pool:GetAttribute("Electrified") == true then return true end
+                if Puddle:GetAttribute("Electrified") == true then return true end
                 
-                for _, child in ipairs(Water:GetDescendants()) do
-                    if child:GetAttribute("Electrified") == true then return true end
+                for _, child in ipairs(Pool:GetDescendants()) do
                     if child.Name == "SparksSound" and child:IsA("Sound") and child.Playing then
                         return true 
                     end
@@ -3422,66 +3421,47 @@ Toggles.BypassWater:OnChanged(function(Value)
             end
 
             local function UpdateBarrier()
-                local ExistingBarrier = Water:FindFirstChild(BarrierName)
-                local Dangerous = IsWaterDangerous()
+                local ExistingBarrier = Puddle:FindFirstChild(BarrierName)
+                local Dangerous = IsPuddleDangerous()
 
                 if Dangerous then
                     if not ExistingBarrier then
-                        local Bridge = Instance.new("Part")
-                        Bridge.Name = BarrierName
-                        Bridge.Anchored = true
-                        Bridge.CanCollide = true
-                        Bridge.CanTouch = false
-                        Bridge.CanQuery = false
-                        Bridge.Transparency = 0.7
-                        Bridge.Color = Color3.fromRGB(255, 50, 50)
-                        Bridge.Material = Enum.Material.ForceField
+                        local Barrier = Instance.new("Part")
+                        Barrier.Name = BarrierName
+                        Barrier.Anchored = true
+                        Barrier.CanCollide = true
+                        Barrier.CanQuery = false
+                        Barrier.CanTouch = false
+                        Barrier.Transparency = 0.7
+                        Barrier.Color = Color3.fromRGB(255, 50, 50)
+                        Barrier.Material = Enum.Material.ForceField
 
-                        -- 获取水的横截面积
-                        local CF, Size
-                        if Water:IsA("BasePart") then
-                            CF = Water.CFrame
-                            Size = Water.Size
-                        elseif Water:IsA("Model") then
-                            CF, Size = Water:GetBoundingBox()
-                        else
-                            CF = Water:GetPivot()
-                            Size = Vector3.new(10, 1, 10)
-                        end
-
-                        -- 【核心】长宽保持和水一致，高度改为 30
-                        Bridge.Size = Vector3.new(Size.X, 30, Size.Z)
-                        -- 位置抬高 15 格，让屏障从水面上方向下延伸
-                        Bridge.CFrame = CF * CFrame.new(0, 15, 0)
-
-                        Bridge.Parent = Room
-                        WaterParts[Water] = Bridge
-                        Functions.Notify({Title = "电水激活，屏障已升起！"})
+                        -- 【核心】精确匹配水坑的横截面积
+                        Barrier.Size = Vector3.new(Puddle.Size.X, 30, Puddle.Size.Z)
+                        Barrier.CFrame = Puddle.CFrame * CFrame.new(0, 15, 0)
+                        
+                        Barrier.Parent = Puddle
+                        WaterParts[Puddle] = Barrier
+                        Functions.Notify({Title = "电水预警/激活，屏障已升起！"})
                     end
                 else
                     if ExistingBarrier then
                         ExistingBarrier:Destroy()
-                        WaterParts[Water] = nil
-                        Functions.Notify({Title = "电水安全，屏障已移除。"})
+                        WaterParts[Puddle] = nil
                     end
                 end
             end
 
             UpdateBarrier()
 
-            -- 监听属性变化
-            if Water:IsA("Model") then
-                for _, child in ipairs(Water:GetDescendants()) do
-                    if child:GetAttribute("Electrified") ~= nil then
-                        table.insert(Connections, child:GetAttributeChangedSignal("Electrified"):Connect(UpdateBarrier))
-                    end
-                end
-            end
+            -- 监听父级 Pool 和自身的属性变化
+            table.insert(Connections, Pool:GetAttributeChangedSignal("Electrified"):Connect(UpdateBarrier))
+            table.insert(Connections, Puddle:GetAttributeChangedSignal("Electrified"):Connect(UpdateBarrier))
 
-            -- 每帧检查火花/音效
+            -- 每帧检查火花/音效状态
             local LoopConn
             LoopConn = Services.RunService.Heartbeat:Connect(function()
-                if not Water or not Water.Parent then
+                if not Puddle or not Puddle.Parent then
                     if LoopConn then LoopConn:Disconnect() end
                     return
                 end
@@ -3490,20 +3470,34 @@ Toggles.BypassWater:OnChanged(function(Value)
             table.insert(Connections, LoopConn)
         end
 
-        local LatestRoomNum = tonumber(LatestRoom.Value) or 0
-        for RoomNum = math.max(0, LatestRoomNum - 4), LatestRoomNum do
-            local Room = CurrentRooms:FindFirstChild(tostring(RoomNum))
-            if Room then
-                task.spawn(ProcessWaterBypassRoom, Room)
+        local function ScanWater(Water)
+            if Water:IsA("Model") then
+                for _, child in ipairs(Water:GetDescendants()) do
+                    if child.Name == "Puddle" and child:IsA("BasePart") then
+                        task.spawn(ProcessWaterPuddle, child)
+                    end
+                end
             end
         end
 
+        local function ScanRoom(Room)
+            local Water = Room:FindFirstChild("Water")
+            if Water then ScanWater(Water) end
+        end
+
+        local LatestRoomNum = tonumber(LatestRoom.Value) or 0
+        for RoomNum = math.max(0, LatestRoomNum - 4), LatestRoomNum do
+            local Room = CurrentRooms:FindFirstChild(tostring(RoomNum))
+            if Room then ScanRoom(Room) end
+        end
+
         Connections.WaterBypassConnection = CurrentRooms.ChildAdded:Connect(function(Room)
-            task.spawn(ProcessWaterBypassRoom, Room)
+            task.wait(3)
+            ScanRoom(Room)
         end)
     else
-        for _, Bridge in pairs(WaterParts) do
-            if Bridge then Bridge:Destroy() end
+        for _, Barrier in pairs(WaterParts) do
+            if Barrier then Barrier:Destroy() end
         end
         table.clear(WaterParts)
     end
