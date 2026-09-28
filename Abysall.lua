@@ -3383,7 +3383,6 @@ Functions.HandleHidingTransparency = function(Model)
 end
 
 Toggles.BypassWater:OnChanged(function(Value)
-    Functions.Notify({Title = "绕过电水功能已启用"})
     
     if Connections.WaterBypassConnection then
         Connections.WaterBypassConnection:Disconnect()
@@ -3394,7 +3393,6 @@ Toggles.BypassWater:OnChanged(function(Value)
         Connections.WaterRoomConnection = nil
     end
 
-    -- 清理旧屏障
     for _, Barrier in pairs(WaterParts) do
         if Barrier and Barrier.Parent then Barrier:Destroy() end
     end
@@ -3414,9 +3412,8 @@ Toggles.BypassWater:OnChanged(function(Value)
             Puddle:SetAttribute("Abysall_Barrier_Setup", true)
 
             local BarrierName = "Abysall_DynamicBarrier"
-            local HasTeleported = false -- 防止同一水坑反复传送
+            local HasTeleported = false
 
-            -- 核心判定：有没有电
             local function IsPuddleDangerous()
                 if Pool:GetAttribute("Electrified") == true then return true end
                 if Puddle:GetAttribute("Electrified") == true then return true end
@@ -3450,7 +3447,6 @@ Toggles.BypassWater:OnChanged(function(Value)
                     end
                     
                     Character:PivotTo(SafeCFrame)
-                    Functions.Notify({Title = "危险！已自动将你传送出电水区域。"})
                 end
             end
 
@@ -3481,7 +3477,6 @@ Toggles.BypassWater:OnChanged(function(Value)
                     
                     if Globals.WaterNotifiedRooms[Room] ~= "Danger" then
                         Globals.WaterNotifiedRooms[Room] = "Danger"
-                        Functions.Notify({Title = "电水预警/激活，屏障已升起！"})
                     end
                 else
                     if ExistingBarrier then
@@ -3491,7 +3486,6 @@ Toggles.BypassWater:OnChanged(function(Value)
                     
                     if Globals.WaterNotifiedRooms[Room] ~= "Safe" then
                         Globals.WaterNotifiedRooms[Room] = "Safe"
-                        Functions.Notify({Title = "电水安全，屏障已移除。"})
                     end
                 end
             end
