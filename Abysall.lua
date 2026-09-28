@@ -166,7 +166,7 @@ local ItemNames = {
 	["Battery"]           = "电池",
 	["Candle"]            = "蜡烛",
 	["Crucifix"]          = "十字架",
-	["CrucifixWall"]      = "十字架",
+	["CrucifixWall"]      = "[十字架]",
 	["Glowsticks"]        = "荧光棒",
 	["SkeletonKey"]       = "骷髅钥匙",
 	["Candy"]             = "糖果",
@@ -214,6 +214,7 @@ local ItemNames = {
     ["FihFlakes"]         = "鱼片",
     ["SallyToyObtain"]    = "小黑马",
     ["SecretCD"]          = "光盘",
+    ["Leftovers"]         = "小餐盒",
 }
 
 local CutsceneNames = {
