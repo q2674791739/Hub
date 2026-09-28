@@ -3424,31 +3424,23 @@ Toggles.BypassWater:OnChanged(function(Value)
                 return false
             end
 
-            -- 安全传送函数
-            local function TryTeleportToSafety()
-                if HasTeleported then return end
-                if not Character or not RootPart then return end
+-- 安全传送函数：传送到下一个门
+         local function TryTeleportToSafety()
+             if HasTeleported then return end
+             if not Character or not RootPart then return end
 
-                local PlayerPos = Vector3.new(RootPart.Position.X, Puddle.Position.Y, RootPart.Position.Z)
-                local PuddlePos = Vector3.new(Puddle.Position.X, Puddle.Position.Y, Puddle.Position.Z)
-                local DistToPuddle = (PlayerPos - PuddlePos).Magnitude
-                
-                if DistToPuddle < math.max(Puddle.Size.X, Puddle.Size.Z) then
+             local PlayerPos = Vector3.new(RootPart.Position.X, Puddle.Position.Y, RootPart.Position.Z)
+             local PuddlePos = Vector3.new(Puddle.Position.X, Puddle.Position.Y, Puddle.Position.Z)
+             local DistToPuddle = (PlayerPos - PuddlePos).Magnitude
+    
+             if DistToPuddle < math.max(Puddle.Size.X, Puddle.Size.Z) then
+                 local RoomExit = Room:FindFirstChild("RoomExit")
+                 if RoomExit then
                     HasTeleported = true
-                    local SafeCFrame
-                    local RoomEntrance = Room:FindFirstChild("RoomExit") or Room:FindFirstChild("Door")
-                    
-                    if RoomEntrance then
-                        SafeCFrame = RoomEntrance:GetPivot()
-                    else
-                        local PushDir = (RootPart.Position - Puddle.Position).Unit
-                        if PushDir.Magnitude < 0.1 then PushDir = Vector3.new(0, 0, 1) end
-                        SafeCFrame = RootPart.CFrame + (PushDir * 15)
-                    end
-                    
-                    Character:PivotTo(SafeCFrame)
-                end
-            end
+                    Character:PivotTo(RoomExit:GetPivot())
+                  end
+              end
+          end
 
             local function UpdateBarrier()
                 local ExistingBarrier = Puddle:FindFirstChild(BarrierName)
