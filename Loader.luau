@@ -10,7 +10,7 @@ local GameList = {
   [2440500124] = "Doors"
 }
 
-local UIBaseUrl = "https://raw.githubusercontent.com/q2674791739/UI/main/Abysall/"
+local UIBaseUrl = "https://raw.githubusercontent.com/q2674791739/Library/main/Abysall/"
 local HubBaseUrl = "https://raw.githubusercontent.com/q2674791739/Hub/main/"
 
 getgenv().Abysall = {
