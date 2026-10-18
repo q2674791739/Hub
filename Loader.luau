@@ -1,14 +1,9 @@
--- 1. 加了防崩溃保护，解决第4行报错
 if getgenv and getgenv().Abysall then
     return 
 end
 if getgenv then
     getgenv().Abysall = { Legit = true }
 end
-
-local GameList = {
-  [2440500124] = "Doors"
-}
 
 local UIBaseUrl = "https://raw.githubusercontent.com/q2674791739/Library/main/Abysall/"
 local HubBaseUrl = "https://raw.githubusercontent.com/q2674791739/Hub/main/"
@@ -53,5 +48,8 @@ end
 
 Abysall.Interface = loadstring(game:HttpGet(UIBaseUrl .. "Interface.luau"))()
 
--- 2. 修改点：把你改名后的短加载器后缀改成 .lua
-loadstring(game:HttpGet(HubBaseUrl .. "Loader.lua"))()
+if game.PlaceId == 6516141723 then
+    loadstring(game:HttpGet(HubBaseUrl .. "Lobby.luau"))()
+else
+    loadstring(game:HttpGet(HubBaseUrl .. "Abysall.lua"))()
+end
